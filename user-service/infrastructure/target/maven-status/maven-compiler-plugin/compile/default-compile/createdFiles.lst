@@ -1,0 +1,5 @@
+com\example\mappers\UserEntityMapper.class
+com\example\repositories\JpaUserRepository.class
+com\example\entities\UserEntity.class
+com\example\repositories\SpringDataUserJpaRepository.class
+com\example\UserServiceInfrastructure.class

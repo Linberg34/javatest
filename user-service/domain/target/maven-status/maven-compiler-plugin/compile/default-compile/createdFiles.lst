@@ -1,0 +1,3 @@
+com\example\repositories\UserRepository.class
+com\example\entities\User.class
+com\example\UserServiceDomain.class
