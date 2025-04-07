@@ -1,7 +1,6 @@
 package com.application.service.implementations;
 
 import com.application.exceptions.UserNotFoundException;
-import com.application.security.PasswordEncoderConfig;
 import com.application.service.interfaces.UserService;
 import com.example.entities.User;
 import com.example.enums.Role;
