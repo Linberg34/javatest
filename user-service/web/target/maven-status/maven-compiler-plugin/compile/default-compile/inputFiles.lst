@@ -1,4 +1,5 @@
 D:\CarRental\user-service\web\src\main\java\com\example\config\SecurityConfig.java
+D:\CarRental\user-service\web\src\main\java\com\example\config\SwaggerConfig.java
 D:\CarRental\user-service\web\src\main\java\com\example\controllers\AuthController.java
 D:\CarRental\user-service\web\src\main\java\com\example\controllers\UserController.java
 D:\CarRental\user-service\web\src\main\java\com\example\dtos\RefreshTokenRequest.java
