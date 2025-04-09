@@ -44,7 +44,6 @@ public class JwtProvider implements TokenService {
     }
 
 
-
     public String getEmailFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)

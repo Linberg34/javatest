@@ -15,13 +15,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private  final TokenService tokenService;
-    private  final UserRepository userRepository;
+    private final TokenService tokenService;
+    private final UserRepository userRepository;
 
 
     public JwtAuthFilter(TokenService tokenService, UserRepository userRepository) {

@@ -10,9 +10,9 @@ import lombok.Setter;
 public class UserLoginRequest {
     @Email
     @NotBlank
-    private  String email;
+    private String email;
 
     @NotBlank
-    private   String password;
+    private String password;
 
 }

@@ -14,15 +14,15 @@ import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private  final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder){
-        this.userRepository=userRepository;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User register(String email, String password){
+    public User register(String email, String password) {
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    public User getById(UUID id){
+    public User getById(UUID id) {
         User user = userRepository.findById(id);
         if (user == null) {
             throw new UserNotFoundException(id);
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    public void delete(UUID id){
+    public void delete(UUID id) {
         if (userRepository.findById(id) == null) {
             throw new RuntimeException("User not found");
         }

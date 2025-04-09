@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    private  final AuthService authService;
+    private final AuthService authService;
 
-    public  AuthController(AuthService authService){
-        this.authService=authService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/login")
-    public TokenPair login(@RequestBody UserLoginRequest loginRequest){
-        return  authService.login(loginRequest.getEmail(),loginRequest.getPassword());
+    public TokenPair login(@RequestBody UserLoginRequest loginRequest) {
+        return authService.login(loginRequest.getEmail(), loginRequest.getPassword());
     }
 
     @PostMapping("/refresh")
-    public AuthResponse refreshToken(@RequestBody RefreshTokenRequest request){
+    public AuthResponse refreshToken(@RequestBody RefreshTokenRequest request) {
         String newAccessToken = authService.refreshToken(request.getRefreshToken());
-        return  new AuthResponse(newAccessToken,request.getRefreshToken());
+        return new AuthResponse(newAccessToken, request.getRefreshToken());
     }
 }

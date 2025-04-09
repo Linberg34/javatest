@@ -1,11 +1,11 @@
+com\example\mappers\AuthMapper.class
+com\example\dtos\UserRegistrationRequest.class
+com\example\responses\AuthResponse.class
 com\example\config\SecurityConfig.class
+com\example\controllers\AuthController.class
+com\example\responses\UserResponse.class
+com\example\controllers\UserController.class
 com\example\dtos\RefreshTokenRequest.class
 com\example\mappers\UserDtoMapper.class
 com\example\dtos\UserLoginRequest.class
 com\example\UserServiceWeb.class
-com\example\mappers\AuthMapper.class
-com\example\dtos\UserRegistrationRequest.class
-com\example\responses\AuthResponse.class
-com\example\controllers\AuthController.class
-com\example\responses\UserResponse.class
-com\example\controllers\UserController.class

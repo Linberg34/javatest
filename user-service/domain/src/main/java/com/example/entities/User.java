@@ -11,9 +11,10 @@ import java.util.UUID;
 @Setter
 public class User {
 
-        private UUID id;
-        private String email;
-        private String password;
-        private Set<Role> roles;
-        private boolean active;
+    private UUID id;
+    private String email;
+    private String password;
+    private String username;
+    private Set<Role> roles;
+    private boolean active;
 }

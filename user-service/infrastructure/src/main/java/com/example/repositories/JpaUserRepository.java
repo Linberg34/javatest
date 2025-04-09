@@ -31,7 +31,8 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public void delete(UUID id) {}
+    public void delete(UUID id) {
+    }
 
     @Override
     public User findByEmail(String email) {
@@ -47,8 +48,6 @@ public class JpaUserRepository implements UserRepository {
                 .map(UserEntityMapper::toDomain)
                 .toList();
     }
-
-
 
 
 }
