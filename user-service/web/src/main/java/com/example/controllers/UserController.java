@@ -10,9 +10,13 @@ import com.example.mappers.UserDtoMapper;
 import com.example.repositories.UserRepository;
 import com.example.responses.AuthResponse;
 import com.example.responses.UserResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +37,14 @@ public class UserController {
 
     @PermitAll
     @PostMapping("/register")
+    @Operation(
+            summary = "Зарегистрировать пользователя",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Успешно")
+            }
+    )
     public AuthResponse register(@Valid @RequestBody UserRegistrationRequest request) {
-        userService.register(request.getEmail(), request.getPassword());
+        userService.register(request.getEmail(), request.getUsername(), request.getPassword());
 
         TokenPair tokens = authService.login(request.getEmail(), request.getPassword());
         return new AuthResponse(tokens.getAccessToken(), tokens.getRefreshToken());
@@ -43,38 +53,97 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Получить пользователя по ID (для админов)",
+            security = @SecurityRequirement(name = "bearerAuth"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Успешно")
+            }
+    )
     public UserResponse getById(@PathVariable UUID id) {
         return UserDtoMapper.toResponse(
                 userService.getById(id)
         );
     }
 
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
-    public UserResponse getCurrentUser(@AuthenticationPrincipal User user) {
+    @Operation(
+            summary = "Получить данные текущего пользователя",
+            security = @SecurityRequirement(name = "bearerAuth"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Успешно")
+            }
+    )
+    public UserResponse getCurrentUser(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
         return UserDtoMapper.toResponse(user);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public UserResponse update(@PathVariable UUID id, @Valid @RequestBody UserRegistrationRequest request) {
+    @Operation(summary = "Обновить данные любого пользователя (только для администратора)")
+    public UserResponse updateByAdmin(@PathVariable UUID id, @Valid @RequestBody UserRegistrationRequest request) {
         return UserDtoMapper.toResponse(
-                userService.update(id, request.getEmail(), request.getPassword())
+                userService.update(id, request.getEmail(), request.getPassword(), request.getUsername())
         );
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping
+    @Operation(
+            summary = "Обновить собственные данные",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    public UserResponse updateSelf(@AuthenticationPrincipal User user,
+                                   @Valid @RequestBody UserRegistrationRequest request) {
+        return UserDtoMapper.toResponse(
+                userService.update(user.getId(), request.getEmail(), request.getPassword(), request.getUsername())
+        );
+    }
+
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/admin/{id}")
+    @Operation(
+            summary = "Удалить пользователя (только админ)",
+            security = @SecurityRequirement(name = "bearerAuth"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Успешно")
+            }
+    )
+    public void deleteByAdmin(@PathVariable UUID id) {
         userService.delete(id);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/me")
+    @Operation(
+            summary = "Удалить свой аккаунт",
+            security = @SecurityRequirement(name = "bearerAuth"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Успешно")
+            }
+    )
+    public void deleteSelf(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        userService.delete(user.getId());
+    }
+
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
+    @Operation(
+            summary = "Получить список пользователей",
+            security = @SecurityRequirement(name = "bearerAuth"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Успешно")
+            }
+    )
     public List<UserResponse> getAllUsers() {
         return userService.getAll().stream()
                 .map(UserDtoMapper::toResponse)
                 .toList();
     }
-
 }

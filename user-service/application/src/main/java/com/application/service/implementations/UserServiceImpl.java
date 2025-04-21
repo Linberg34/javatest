@@ -22,10 +22,11 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User register(String email, String password) {
+    public User register(String email, String username, String password) {
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
+        user.setUsername(username);
         user.setRoles(Set.of(Role.Client));
         user.setActive(true);
 
@@ -56,13 +57,16 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public User update(UUID id, String email, String password) {
+    public User update(UUID id, String email, String password, String username) {
         User user = userRepository.findById(id);
         if (user == null) {
             throw new RuntimeException("User not found");
         }
         if (email != null && !email.isBlank()) {
             user.setEmail(email);
+        }
+        if(username !=null && !username.isBlank()){
+            user.setUsername(username);
         }
         if (password != null && !password.isBlank()) {
             user.setPassword(passwordEncoder.encode(password));

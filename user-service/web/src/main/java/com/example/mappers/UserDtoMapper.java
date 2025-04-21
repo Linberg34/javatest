@@ -8,7 +8,6 @@ public class UserDtoMapper {
 
     public static UserResponse toResponse(User user) {
         UserResponse dto = new UserResponse();
-        dto.setId(user.getId());
         dto.setEmail(user.getEmail());
         dto.setUsername(user.getUsername());
         dto.setRoles(user.getRoles());

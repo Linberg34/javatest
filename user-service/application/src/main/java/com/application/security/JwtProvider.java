@@ -9,8 +9,9 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
+
 @Component
-public class JwtProvider implements TokenService {
+public class JwtProvider implements TokenService  {
 
     private final JwtProperties jwtProperties;
     private final Key secretKey;

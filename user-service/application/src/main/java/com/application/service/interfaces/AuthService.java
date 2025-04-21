@@ -8,8 +8,4 @@ public interface AuthService {
     TokenPair login(String email, String password);
 
     String refreshToken(String refreshToken);
-
-    boolean validateToken(String token);
-
-    User getUserFromToken(String token);
 }

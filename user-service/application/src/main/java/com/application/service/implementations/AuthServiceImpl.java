@@ -52,16 +52,4 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    @Override
-    public boolean validateToken(String token) {
-        return jwtProvider.validateToken(token);
-    }
-
-
-    @Override
-    public User getUserFromToken(String token) {
-        String email = jwtProvider.getEmailFromToken(token);
-        return userRepository.findByEmail(email);
-    }
-
 }
