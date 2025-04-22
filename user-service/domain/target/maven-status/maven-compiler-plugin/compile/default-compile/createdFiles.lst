@@ -1,3 +1,5 @@
-com\example\repositories\UserRepository.class
+com\example\repositories\RefreshTokenRepository.class
 com\example\entities\User.class
+com\example\repositories\UserRepository.class
+com\example\entities\RefreshToken.class
 com\example\UserServiceDomain.class
