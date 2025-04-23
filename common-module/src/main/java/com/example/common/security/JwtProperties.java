@@ -1,4 +1,4 @@
-package com.application.security;
+package com.example.common.security;
 
 import lombok.Getter;
 import lombok.Setter;

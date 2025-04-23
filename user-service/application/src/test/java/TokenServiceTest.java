@@ -1,4 +1,4 @@
-import com.application.security.JwtProperties;
+import com.example.common.security.JwtProperties;
 import com.application.security.JwtProvider;
 import com.example.entities.User;
 import org.junit.jupiter.api.BeforeEach;

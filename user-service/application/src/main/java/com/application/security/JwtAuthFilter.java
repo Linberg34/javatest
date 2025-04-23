@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -46,38 +47,23 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             String token = resolveToken(request);
 
-            if (token != null) {
-                if (!tokenService.validateToken(token)) {
-                    logger.warn("Invalid JWT token: {}", token);
-                    filterChain.doFilter(request, response);
-                    return;
+            if (token != null && tokenService.validateToken(token)) {
+                UUID userId = tokenService.getUserIdFromToken(token);
+                User user = userRepository.findById(userId);
+                if (user != null) {
+                    var authorities = user.getRoles().stream()
+                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+                            .collect(Collectors.toSet());
+
+                    var auth = new UsernamePasswordAuthenticationToken(user, null, authorities);
+                    auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                } else {
+                    logger.warn("User not found for id from token: {}", userId);
                 }
-
-                String email = tokenService.getEmailFromToken(token);
-                logger.info("Processing token for email: {}", email);
-
-                User user = userRepository.findByEmail(email);
-
-                if (user == null) {
-                    logger.warn("User not found for email: {}", email);
-                    filterChain.doFilter(request, response);
-                    return;
-                }
-
-                var authorities = user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-                        .collect(Collectors.toSet());
-
-                logger.info("User authenticated with roles: {}", authorities);
-
-                var auth = new UsernamePasswordAuthenticationToken(user, null, authorities);
-                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } else {
-                logger.debug("No JWT token found in request");
             }
         } catch (Exception e) {
-            logger.error("Authentication error: {}", e.getMessage(), e);
+            logger.error("Failed to authenticate user from JWT", e);
         }
 
         filterChain.doFilter(request, response);
@@ -85,7 +71,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private String resolveToken(HttpServletRequest request) {
         String bearer = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {
+        if (bearer != null && bearer.startsWith("Bearer ")) {
             return bearer.substring(7);
         }
         return null;

@@ -46,7 +46,7 @@ public class UserServiceTest {
         assertThat(result.getEmail()).isEqualTo(email);
         assertThat(result.getPassword()).isEqualTo(encodedPassword);
         assertThat(result.getUsername()).isEqualTo(username);
-        assertThat(result.getRoles()).containsExactly(Role.Client);
+        assertThat(result.getRoles()).containsExactly(Role.CLIENT);
         assertThat(result.isActive()).isTrue();
     }
 

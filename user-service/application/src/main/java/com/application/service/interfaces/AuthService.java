@@ -1,7 +1,6 @@
 package com.application.service.interfaces;
 
-import com.application.util.TokenPair;
-import com.example.entities.User;
+import com.example.common.util.TokenPair;
 
 
 public interface AuthService {

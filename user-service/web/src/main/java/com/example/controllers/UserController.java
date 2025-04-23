@@ -3,14 +3,15 @@ package com.example.controllers;
 
 import com.application.service.interfaces.AuthService;
 import com.application.service.interfaces.UserService;
-import com.application.util.TokenPair;
-import com.example.dtos.UserRegistrationRequest;
+import com.example.common.util.TokenPair;
+import com.example.common.dto.UserRegistrationRequest;
 import com.example.entities.User;
 import com.example.mappers.UserDtoMapper;
 import com.example.repositories.UserRepository;
-import com.example.responses.AuthResponse;
-import com.example.responses.UserResponse;
+import com.example.common.dto.AuthResponse;
+import com.example.common.dto.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.PermitAll;
@@ -60,7 +61,7 @@ public class UserController {
                     @ApiResponse(responseCode = "200", description = "Успешно")
             }
     )
-    public UserResponse getById(@PathVariable UUID id) {
+    public UserResponse getById(@RequestParam(name = "id", required = true) UUID id) {
         return UserDtoMapper.toResponse(
                 userService.getById(id)
         );
@@ -83,10 +84,18 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    @Operation(summary = "Обновить данные любого пользователя (только для администратора)")
-    public UserResponse updateByAdmin(@PathVariable UUID id, @Valid @RequestBody UserRegistrationRequest request) {
+    @Operation(summary = "Обновить данные любого пользователя (только для администратора)",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    public UserResponse updateByAdmin(
+            @PathVariable("id") UUID id,
+            @Valid @RequestBody UserRegistrationRequest request
+    ) {
         return UserDtoMapper.toResponse(
-                userService.update(id, request.getEmail(), request.getPassword(), request.getUsername())
+                userService.update(id,
+                        request.getEmail(),
+                        request.getPassword(),
+                        request.getUsername())
         );
     }
 
@@ -113,7 +122,9 @@ public class UserController {
                     @ApiResponse(responseCode = "200", description = "Успешно")
             }
     )
-    public void deleteByAdmin(@PathVariable UUID id) {
+    public void deleteByAdmin(
+            @RequestParam(name = "id", required = true) UUID id
+    ) {
         userService.delete(id);
     }
 

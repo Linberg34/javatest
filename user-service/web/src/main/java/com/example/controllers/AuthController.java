@@ -1,10 +1,10 @@
 package com.example.controllers;
 
 import com.application.service.interfaces.AuthService;
-import com.application.util.TokenPair;
-import com.example.dtos.RefreshTokenRequest;
-import com.example.dtos.UserLoginRequest;
-import com.example.responses.AuthResponse;
+import com.example.common.util.TokenPair;
+import com.example.common.dto.RefreshTokenRequest;
+import com.example.common.dto.UserLoginRequest;
+import com.example.common.dto.AuthResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package com.application.util;
+package com.example.common.util;
 
 import lombok.Getter;
 import lombok.Setter;

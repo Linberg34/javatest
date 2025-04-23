@@ -1,4 +1,4 @@
-package com.example.responses;
+package com.example.common.dto;
 
 import com.example.common.enums.Role;
 import lombok.Getter;
