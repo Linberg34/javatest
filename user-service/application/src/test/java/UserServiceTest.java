@@ -1,7 +1,7 @@
 import com.application.exceptions.UserNotFoundException;
 import com.application.service.implementations.UserServiceImpl;
 import com.example.entities.User;
-import com.example.enums.Role;
+import com.example.common.enums.Role;
 import com.example.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

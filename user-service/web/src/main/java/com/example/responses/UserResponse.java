@@ -1,11 +1,10 @@
 package com.example.responses;
 
-import com.example.enums.Role;
+import com.example.common.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Set;
-import java.util.UUID;
 
 
 @Getter

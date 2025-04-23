@@ -3,7 +3,7 @@ package com.application.service.implementations;
 import com.application.exceptions.UserNotFoundException;
 import com.application.service.interfaces.UserService;
 import com.example.entities.User;
-import com.example.enums.Role;
+import com.example.common.enums.Role;
 import com.example.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

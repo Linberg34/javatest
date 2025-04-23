@@ -7,23 +7,24 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="api-gateway" />
       </profile>
-      <profile name="Annotation profile for CarRental" enabled="true">
+      <profile name="Annotation profile for car-rental" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.34/lombok-1.18.34.jar" />
         </processorPath>
         <module name="application" />
-        <module name="common" />
         <module name="web" />
+        <module name="common-module" />
         <module name="infrastructure" />
         <module name="domain" />
+        <module name="api-gateway" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="common" target="21" />
       <module name="repository" target="17" />
       <module name="service" target="17" />
       <module name="useCases" target="17" />
@@ -31,16 +32,16 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="api-gateway" options="-parameters" />
-      <module name="application" options="-parameters" />
-      <module name="common" options="-parameters" />
-      <module name="domain" options="-parameters" />
-      <module name="infrastructure" options="-parameters" />
+      <module name="api-gateway" options="" />
+      <module name="application" options="" />
+      <module name="common" options="" />
+      <module name="domain" options="" />
+      <module name="infrastructure" options="" />
       <module name="repository" options="-parameters" />
       <module name="service" options="-parameters" />
       <module name="useCases" options="-parameters" />
-      <module name="user-service" options="-parameters" />
-      <module name="web" options="-parameters" />
+      <module name="user-service" options="" />
+      <module name="web" options="" />
     </option>
   </component>
 </project>
