@@ -2,22 +2,32 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/api-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/car-service/car-application/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/car-service/car-application/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/car-service/car-domain/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/car-service/car-domain/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/car-service/car-infrastructure/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/car-service/car-infrastructure/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/car-service/car-web/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/car-service/car-web/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/car-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/car-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common-module/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common-module/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/user-service/application/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/user-service/application/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/common/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/user-service/domain/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/user-service/domain/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/user-service/infrastructure/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/user-service/infrastructure/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/repository/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/useCases/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/user-service/web/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/user-service/web/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/user-service/user-application/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/user-service/user-application/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/user-service/user-domain/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/user-service/user-domain/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/user-service/user-infrastructure/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/user-service/user-infrastructure/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/user-service/user-web/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/user-service/user-web/src/main/resources" charset="UTF-8" />
   </component>
 </project>

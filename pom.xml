@@ -10,6 +10,11 @@
         <module>common-module</module>
         <module>api-gateway</module>
         <module>user-service</module>
+        <module>car-service</module>
+        <module>car-service/car-domain</module>
+        <module>car-service/car-application</module>
+        <module>car-service/car-infrastructure</module>
+        <module>car-service/car-web</module>
     </modules>
 
     <properties>
@@ -37,7 +42,6 @@
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
                 </plugin>
-                <!-- Добавьте maven-compiler-plugin для Lombok -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>

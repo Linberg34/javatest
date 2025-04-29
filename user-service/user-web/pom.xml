@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>web</artifactId>
+    <artifactId>user-web</artifactId>
 
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
@@ -32,12 +32,12 @@
     <dependencies>
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>application</artifactId>
+            <artifactId>user-application</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>infrastructure</artifactId>
+            <artifactId>user-infrastructure</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
