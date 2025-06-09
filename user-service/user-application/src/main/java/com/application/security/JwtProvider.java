@@ -26,10 +26,11 @@ public class JwtProvider implements TokenService {
     @Override
     public String generateAccessToken(User user) {
         long expirationMillis = parseDuration(jwtProperties.getAccessTokenExpiration());
+        String subject = user.getId() != null
+                ? user.getId().toString()
+                : UUID.randomUUID().toString();
         return Jwts.builder()
-                // ставим в subject неизменяемый UUID
-                .setSubject(user.getId().toString())
-                // кладём email в отдельный клейм, если нужно где-то читать его
+                .setSubject(subject)
                 .claim("email", user.getEmail())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -39,13 +40,17 @@ public class JwtProvider implements TokenService {
     @Override
     public String generateRefreshToken(User user) {
         long expirationMillis = parseDuration(jwtProperties.getRefreshTokenExpiration());
+        String subject = user.getId() != null
+                ? user.getId().toString()
+                : UUID.randomUUID().toString();
         return Jwts.builder()
-                .setSubject(user.getId().toString())
+                .setSubject(subject)
                 .claim("email", user.getEmail())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     @Override
     public String getEmailFromToken(String token) {

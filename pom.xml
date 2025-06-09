@@ -11,10 +11,6 @@
         <module>api-gateway</module>
         <module>user-service</module>
         <module>car-service</module>
-        <module>car-service/car-domain</module>
-        <module>car-service/car-application</module>
-        <module>car-service/car-infrastructure</module>
-        <module>car-service/car-web</module>
     </modules>
 
     <properties>
