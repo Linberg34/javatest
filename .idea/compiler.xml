@@ -21,7 +21,6 @@
         <module name="common-module" />
         <module name="api-gateway" />
         <module name="car-domain" />
-        <module name="car-service" />
         <module name="user-application" />
         <module name="car-application" />
         <module name="user-web" />
