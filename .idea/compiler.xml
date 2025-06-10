@@ -18,6 +18,7 @@
         <module name="car-web" />
         <module name="user-infrastructure" />
         <module name="user-domain" />
+        <module name="gatew" />
         <module name="common-module" />
         <module name="api-gateway" />
         <module name="car-domain" />

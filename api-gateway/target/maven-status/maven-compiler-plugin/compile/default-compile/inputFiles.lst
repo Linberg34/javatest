@@ -1,1 +1,3 @@
 D:\CarRental\api-gateway\src\main\java\com\example\ApiGateway.java
+D:\CarRental\api-gateway\src\main\java\com\example\filter\AuthenticationFilter.java
+D:\CarRental\api-gateway\src\main\java\com\example\filter\LoggingFilter.java

@@ -1,2 +1,10 @@
+com\example\common\dto\UserResponse.class
+com\example\common\security\JwtUtil.class
 com\example\CommonModule.class
+com\example\common\dto\UserRegistrationRequest.class
+com\example\common\security\JwtProperties.class
 com\example\common\enums\Role.class
+com\example\common\dto\UserLoginRequest.class
+com\example\common\dto\AuthResponse.class
+com\example\common\dto\RefreshTokenRequest.class
+com\example\common\util\TokenPair.class

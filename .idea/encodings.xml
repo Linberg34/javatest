@@ -14,6 +14,8 @@
     <file url="file://$PROJECT_DIR$/car-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common-module/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common-module/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gatew/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gatew/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/common/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user-service/repository/src/main/java" charset="UTF-8" />
