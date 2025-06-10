@@ -45,4 +45,4 @@ management:
         include: gateway,health,info
 
 jwt:
-  secret: "VkqW3Us7zRA2TxmjLzRA2TxmjLzvD6qShEXAMPLEKEYDUMMYtJwRMqYkzXoDcs1pB"
+  secret: "VkqW3Us7zRA2TxmjLzvD6qShEXAMPLEKEYDUMMYtJwRMqYkzXoDcs1pB"
