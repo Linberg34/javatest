@@ -4,6 +4,8 @@ com\example\CommonModule.class
 com\example\common\dto\UserRegistrationRequest.class
 com\example\common\security\JwtProperties.class
 com\example\common\enums\Role.class
+com\example\common\entity\BaseAuditableEntity.class
+com\example\common\enums\CarStatus.class
 com\example\common\dto\UserLoginRequest.class
 com\example\common\dto\AuthResponse.class
 com\example\common\dto\RefreshTokenRequest.class

@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
-// вот он — главный WebMVC-конфиг
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 
 @SpringBootApplication(
@@ -14,7 +13,7 @@ import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguratio
                 ServletWebServerFactoryAutoConfiguration.class,
                 DispatcherServletAutoConfiguration.class,
                 ErrorMvcAutoConfiguration.class,
-                WebMvcAutoConfiguration.class    // ← этот тоже отключаем
+                WebMvcAutoConfiguration.class
         }
 )
 public class ApiGateway {
