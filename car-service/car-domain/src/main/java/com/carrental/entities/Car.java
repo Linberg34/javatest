@@ -3,9 +3,9 @@ package com.carrental.entities;
 import com.example.common.enums.CarStatus;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UUID;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Getter
 @Setter
