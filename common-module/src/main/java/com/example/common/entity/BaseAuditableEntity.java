@@ -1,9 +1,7 @@
 package com.example.common.entity;
 
 
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,9 +12,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.Instant;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-
 @Getter
 @Setter
 @MappedSuperclass
@@ -24,7 +19,7 @@ import jakarta.persistence.EntityListeners;
 public abstract class BaseAuditableEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @CreatedDate

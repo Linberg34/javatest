@@ -48,7 +48,7 @@ public class CarServiceImpl implements CarService {
         existing.setMake(car.getMake());
         existing.setModel(car.getModel());
         existing.setPlateNumber(car.getPlateNumber());
-        return repo.save(existing);
+        return repo.update(id, existing);
     }
 
     @Override

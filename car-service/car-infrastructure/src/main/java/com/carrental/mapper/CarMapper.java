@@ -22,9 +22,7 @@ public class CarMapper {
     }
 
     public Car toDomain(CarEntity entity) {
-        if (entity == null) {
-            return null;
-        }
+        if (entity == null) return null;
         Car car = new Car();
         car.setId(entity.getId());
         car.setCreatedAt(entity.getCreatedAt());

@@ -14,4 +14,5 @@ public interface CarRepository {
     Optional<Car> findById(UUID id);
     void deleteById(UUID id);
     Car save (Car car);
+    Car update(UUID id, Car car);
 }

@@ -67,11 +67,8 @@ public class CarController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Обновить данные автомобиля")
-    @ApiResponse(responseCode = "200", description = "Автомобиль успешно обновлен")
     public CarDTO update(
-            @Parameter(description = "Идентификатор автомобиля для обновления", required = true)
-            @PathVariable UUID id,
-            @Parameter(description = "Данные для обновления автомобиля", required = true)
+            @PathVariable("id") UUID id,
             @Valid @RequestBody CarUpdateDto dto) {
         return CarDtoMapper.toDto(carService.update(id, CarDtoMapper.fromUpdate(dto)));
     }

@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-@SpringBootApplication(scanBasePackages = "com.carrental")
+@SpringBootApplication(scanBasePackages = {"com.carrental", "com.carrental.implementations", "com.carrental.infrastructure"})
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @EnableMethodSecurity(prePostEnabled = true)
 public class CarServiceWeb {

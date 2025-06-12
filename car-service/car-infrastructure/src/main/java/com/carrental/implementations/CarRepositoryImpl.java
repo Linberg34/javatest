@@ -6,6 +6,8 @@ import com.carrental.mapper.CarMapper;
 import com.carrental.repository.CarRepository;
 import com.carrental.repository.SpringCarRepository;
 import com.example.common.enums.CarStatus;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,9 +18,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class CarRepositoryImpl implements CarRepository {
-
     private final SpringCarRepository repo;
     private final CarMapper mapper;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public CarRepositoryImpl(SpringCarRepository repo, CarMapper mapper) {
         this.repo = repo;
@@ -35,7 +38,6 @@ public class CarRepositoryImpl implements CarRepository {
         return List.of();
     }
 
-
     @Override
     public Optional<Car> findById(UUID id) {
         return repo.findById(id).map(mapper::toDomain);
@@ -49,7 +51,19 @@ public class CarRepositoryImpl implements CarRepository {
     @Override
     public Car save(Car car) {
         CarEntity entity = mapper.toEntity(car);
-        CarEntity saved = repo.save(entity);
+        CarEntity saved = entityManager.merge(entity);
         return mapper.toDomain(saved);
+    }
+
+    public Car update(UUID id, Car car) {
+        CarEntity existing = entityManager.find(CarEntity.class, id);
+        if (existing == null) {
+            throw new RuntimeException("Car not found: " + id);
+        }
+        existing.setMake(car.getMake());
+        existing.setModel(car.getModel());
+        existing.setPlateNumber(car.getPlateNumber());
+        CarEntity updated = entityManager.merge(existing);
+        return mapper.toDomain(updated);
     }
 }
