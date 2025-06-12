@@ -41,11 +41,15 @@ public class CarRepositoryImpl implements CarRepository {
         return repo.findById(id).map(mapper::toDomain);
     }
 
+    @Override
+    public void deleteById(UUID id) {
+        repo.deleteById(id);
+    }
 
     @Override
     public Car save(Car car) {
-        CarEntity e = mapper.toEntity(car);
-        CarEntity saved = repo.save(e);
+        CarEntity entity = mapper.toEntity(car);
+        CarEntity saved = repo.save(entity);
         return mapper.toDomain(saved);
     }
 }

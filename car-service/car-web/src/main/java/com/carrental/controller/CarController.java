@@ -1,68 +1,92 @@
 package com.carrental.controller;
 
-
-import com.carrental.dto.CarDTO;
-import com.carrental.mapper.WebMapper;
+import com.carrental.dto.*;
+import com.carrental.mapper.CarDtoMapper;
 import com.carrental.service.interfaces.CarService;
 import com.example.common.enums.CarStatus;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-
+@Tag(name = "Cars", description = "API для управления автомобилями")
 @RestController
 @RequestMapping("/cars")
 public class CarController {
-    private final CarService carService;
-    private final WebMapper mapper;
 
-    public CarController(CarService carService, WebMapper mapper) {
+    private final CarService carService;
+
+    public CarController(CarService carService) {
         this.carService = carService;
-        this.mapper = mapper;
     }
 
+
     @GetMapping
+    @Operation(summary = "Получить все автомобили")
     public List<CarDTO> listAll() {
-        return carService.listAll().stream()
-                .map(mapper::toDto)
-                .collect(Collectors.toList());
+        return carService.listAll()
+                .stream()
+                .map(CarDtoMapper::toDto)
+                .toList();
     }
 
     @GetMapping("/available")
+    @Operation(summary = "Получить доступные автомобили")
     public List<CarDTO> listAvailable() {
-        return carService.listAvailable().stream()
-                .map(mapper::toDto)
-                .collect(Collectors.toList());
+        return carService.listAvailable()
+                .stream()
+                .map(CarDtoMapper::toDto)
+                .toList();
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Получить автомобиль по ID")
     public CarDTO getById(@PathVariable UUID id) {
-        return mapper.toDto(carService.getById(id));
+        return CarDtoMapper.toDto(carService.getById(id));
     }
+
 
     @PostMapping
-    public ResponseEntity<CarDTO> create(@RequestBody CarDTO dto) {
-        var created = carService.create(mapper.toDomain(dto));
-        var result  = mapper.toDto(created);
+    @Operation(summary = "Создать новый автомобиль")
+    public ResponseEntity<CarDTO> create(@Valid @RequestBody CarCreateDto dto) {
+        System.out.println("DTO Values: make=" + dto.getMake() + ", model=" + dto.getModel() + ", plateNumber=" + dto.getPlateNumber());
+        var created = carService.create(CarDtoMapper.fromCreate(dto));
         return ResponseEntity
-                .created(URI.create("/api/cars/" + result.getId()))
-                .body(result);
+                .created(URI.create("/cars/" + created.getId()))
+                .body(CarDtoMapper.toDto(created));
     }
+
 
     @PutMapping("/{id}")
-    public CarDTO update(@PathVariable UUID id, @RequestBody CarDTO dto) {
-        dto.setId(id);
-        return mapper.toDto(carService.update(mapper.toDomain(dto)));
+    @Operation(summary = "Обновить данные автомобиля")
+    @ApiResponse(responseCode = "200", description = "Автомобиль успешно обновлен")
+    public CarDTO update(
+            @Parameter(description = "Идентификатор автомобиля для обновления", required = true)
+            @PathVariable UUID id,
+            @Parameter(description = "Данные для обновления автомобиля", required = true)
+            @Valid @RequestBody CarUpdateDto dto) {
+        return CarDtoMapper.toDto(carService.update(id, CarDtoMapper.fromUpdate(dto)));
     }
+
 
     @PostMapping("/{id}/status")
+    @Operation(summary = "Изменить статус автомобиля")
     public CarDTO changeStatus(@PathVariable UUID id,
-                               @RequestParam("status")CarStatus status) {
-        return mapper.toDto(carService.changeStatus(id, status));
+                               @RequestParam CarStatus status) {
+        return CarDtoMapper.toDto(carService.changeStatus(id, status));
     }
 
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Удалить автомобиль")
+    public void delete(@PathVariable UUID id) {
+        carService.delete(id);
+    }
 }

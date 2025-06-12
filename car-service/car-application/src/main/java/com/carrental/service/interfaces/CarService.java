@@ -11,6 +11,7 @@ public interface CarService {
     List<Car> listAvailable();
     Car getById(UUID id);
     Car create(Car car);
-    Car update(Car car);
+    Car update(UUID id, Car car);
     Car changeStatus(UUID id, CarStatus newStatus);
+    void delete(UUID id);
 }

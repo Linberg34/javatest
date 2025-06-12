@@ -38,15 +38,17 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car create(Car car) {
-        car.setId(null);
         car.setStatus(CarStatus.FREE);
         return repo.save(car);
     }
 
     @Override
-    public Car update(Car car) {
-        getById(car.getId());
-        return repo.save(car);
+    public Car update(UUID id, Car car) {
+        Car existing = getById(id);
+        existing.setMake(car.getMake());
+        existing.setModel(car.getModel());
+        existing.setPlateNumber(car.getPlateNumber());
+        return repo.save(existing);
     }
 
     @Override
@@ -55,4 +57,9 @@ public class CarServiceImpl implements CarService {
         c.setStatus(newStatus);
         return repo.save(c);
     }
+    @Override
+    public void delete(UUID id) {
+        repo.deleteById(id);
+    }
+
 }

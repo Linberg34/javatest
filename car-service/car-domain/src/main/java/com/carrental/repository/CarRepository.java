@@ -12,7 +12,6 @@ public interface CarRepository {
     List<Car> findAll();
     List<Car> findByStatus(CarStatus status);
     Optional<Car> findById(UUID id);
-
-
+    void deleteById(UUID id);
     Car save (Car car);
 }
