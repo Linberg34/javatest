@@ -1,0 +1,7 @@
+com\example\mappers\AuthMapper.class
+com\example\config\SwaggerConfig.class
+com\example\config\SecurityConfig.class
+com\example\controllers\AuthController.class
+com\example\controllers\UserController.class
+com\example\mappers\UserDtoMapper.class
+com\example\UserServiceWeb.class

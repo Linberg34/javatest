@@ -1,1 +1,3 @@
 com\example\ApiGateway.class
+com\example\filter\LoggingFilter.class
+com\example\filter\AuthenticationFilter.class

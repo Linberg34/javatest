@@ -13,10 +13,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>domain</module>
-        <module>application</module>
-        <module>infrastructure</module>
-        <module>web</module>
+        <module>user-domain</module>
+        <module>user-application</module>
+        <module>user-infrastructure</module>
+        <module>user-web</module>
     </modules>
 
     <dependencies>
