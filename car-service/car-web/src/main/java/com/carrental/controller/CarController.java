@@ -49,7 +49,7 @@ public class CarController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Получить автомобиль по ID")
-    public CarDTO getById(@PathVariable UUID id) {
+    public CarDTO getById( @PathVariable("id") UUID id) {
         return CarDtoMapper.toDto(carService.getById(id));
     }
 
@@ -76,14 +76,14 @@ public class CarController {
 
     @PostMapping("/{id}/status")
     @Operation(summary = "Изменить статус автомобиля")
-    public CarDTO changeStatus(@PathVariable UUID id,
+    public CarDTO changeStatus( @PathVariable("id") UUID id,
                                @RequestParam CarStatus status) {
         return CarDtoMapper.toDto(carService.changeStatus(id, status));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить автомобиль")
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable("id") UUID id) {
         carService.delete(id);
     }
 }

@@ -35,7 +35,10 @@ public class CarRepositoryImpl implements CarRepository {
 
     @Override
     public List<Car> findByStatus(CarStatus status) {
-        return List.of();
+        return repo.findByStatus(status)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
     }
 
     @Override
