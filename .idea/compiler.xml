@@ -24,19 +24,9 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="car-application" target="21" />
-      <module name="car-domain" target="21" />
-      <module name="car-infrastructure" target="21" />
-      <module name="car-service" target="23" />
-      <module name="car-web" target="21" />
-      <module name="common-module" target="21" />
       <module name="repository" target="17" />
       <module name="service" target="17" />
       <module name="useCases" target="17" />
-      <module name="user-application" target="21" />
-      <module name="user-domain" target="21" />
-      <module name="user-infrastructure" target="21" />
-      <module name="user-web" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

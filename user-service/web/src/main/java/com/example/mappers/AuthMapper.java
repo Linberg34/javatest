@@ -1,7 +1,7 @@
 package com.example.mappers;
 
-import com.application.util.TokenPair;
-import com.example.responses.AuthResponse;
+import com.example.common.util.TokenPair;
+import com.example.common.dto.AuthResponse;
 
 public class AuthMapper {
     public static AuthResponse toResponse(TokenPair pair) {

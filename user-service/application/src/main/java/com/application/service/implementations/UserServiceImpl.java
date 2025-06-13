@@ -3,7 +3,7 @@ package com.application.service.implementations;
 import com.application.exceptions.UserNotFoundException;
 import com.application.service.interfaces.UserService;
 import com.example.entities.User;
-import com.example.enums.Role;
+import com.example.common.enums.Role;
 import com.example.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setUsername(username);
-        user.setRoles(Set.of(Role.Client));
+        user.setRoles(Set.of(Role.CLIENT));
         user.setActive(true);
 
         return userRepository.save(user);

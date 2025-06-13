@@ -1,6 +1,6 @@
 package com.example.entities;
 
-import com.example.enums.Role;
+import com.example.common.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 

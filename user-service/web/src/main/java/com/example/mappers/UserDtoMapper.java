@@ -1,8 +1,8 @@
 package com.example.mappers;
 
-import com.example.dtos.UserRegistrationRequest;
+import com.example.common.dto.UserRegistrationRequest;
 import com.example.entities.User;
-import com.example.responses.UserResponse;
+import com.example.common.dto.UserResponse;
 
 public class UserDtoMapper {
 

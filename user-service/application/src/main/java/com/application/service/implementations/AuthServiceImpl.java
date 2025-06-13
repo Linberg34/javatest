@@ -2,7 +2,7 @@ package com.application.service.implementations;
 
 import com.application.security.JwtProvider;
 import com.application.service.interfaces.AuthService;
-import com.application.util.TokenPair;
+import com.example.common.util.TokenPair;
 import com.example.entities.User;
 import com.example.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;

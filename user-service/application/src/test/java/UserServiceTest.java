@@ -1,7 +1,7 @@
 import com.application.exceptions.UserNotFoundException;
 import com.application.service.implementations.UserServiceImpl;
 import com.example.entities.User;
-import com.example.enums.Role;
+import com.example.common.enums.Role;
 import com.example.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +46,7 @@ public class UserServiceTest {
         assertThat(result.getEmail()).isEqualTo(email);
         assertThat(result.getPassword()).isEqualTo(encodedPassword);
         assertThat(result.getUsername()).isEqualTo(username);
-        assertThat(result.getRoles()).containsExactly(Role.Client);
+        assertThat(result.getRoles()).containsExactly(Role.CLIENT);
         assertThat(result.isActive()).isTrue();
     }
 
