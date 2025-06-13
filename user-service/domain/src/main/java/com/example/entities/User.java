@@ -1,11 +1,20 @@
 package com.example.entities;
 
+import com.example.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
+import java.util.Set;
+import java.util.UUID;
+
 @Getter
+@Setter
 public class User {
-        public String email;
-        public String password;
+
+    private UUID id;
+    private String email;
+    private String password;
+    private String username;
+    private Set<Role> roles;
+    private boolean active;
 }
