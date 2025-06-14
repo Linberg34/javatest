@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -56,6 +57,7 @@ public class CarController {
 
     @PostMapping
     @Operation(summary = "Создать новый автомобиль")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CarDTO> create(@Valid @RequestBody CarCreateDto dto) {
         System.out.println("DTO Values: make=" + dto.getMake() + ", model=" + dto.getModel() + ", plateNumber=" + dto.getPlateNumber());
         var created = carService.create(CarDtoMapper.fromCreate(dto));
@@ -66,6 +68,7 @@ public class CarController {
 
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @carSecurity.isOwner(#id)")
     @Operation(summary = "Обновить данные автомобиля")
     public CarDTO update(
             @PathVariable("id") UUID id,
@@ -75,12 +78,14 @@ public class CarController {
 
 
     @PostMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN') or @carSecurity.isOwner(#id)")
     @Operation(summary = "Изменить статус автомобиля")
     public CarDTO changeStatus( @PathVariable("id") UUID id,
                                @RequestParam CarStatus status) {
         return CarDtoMapper.toDto(carService.changeStatus(id, status));
     }
 
+    @PreAuthorize("hasRole('ADMIN') or @carSecurity.isOwner(#id)")
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить автомобиль")
     public void delete(@PathVariable("id") UUID id) {
