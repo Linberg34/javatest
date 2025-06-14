@@ -46,7 +46,7 @@
         <dependency>
             <groupId>com.carrental</groupId>
             <artifactId>common-module</artifactId>
-            <version>${project.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
