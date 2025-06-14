@@ -12,10 +12,6 @@
         <module>user-service</module>
         <module>car-service</module>
         <module>booking-service</module>
-        <module>booking-service/booking-domain</module>
-        <module>booking-service/booking-infrastructure</module>
-        <module>booking-service/booking-application</module>
-        <module>booking-service/booking-web</module>
     </modules>
 
     <properties>

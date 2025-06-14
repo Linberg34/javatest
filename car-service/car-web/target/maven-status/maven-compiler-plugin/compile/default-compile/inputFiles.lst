@@ -1,4 +1,5 @@
 D:\CarRental\car-service\car-web\src\main\java\com\carrental\CarServiceWeb.java
+D:\CarRental\car-service\car-web\src\main\java\com\carrental\config\GatewayAuthHeaderFilter.java
 D:\CarRental\car-service\car-web\src\main\java\com\carrental\config\SecurityConfig.java
 D:\CarRental\car-service\car-web\src\main\java\com\carrental\config\SwaggerConfig.java
 D:\CarRental\car-service\car-web\src\main\java\com\carrental\controller\CarController.java
@@ -6,3 +7,4 @@ D:\CarRental\car-service\car-web\src\main\java\com\carrental\dto\CarCreateDto.ja
 D:\CarRental\car-service\car-web\src\main\java\com\carrental\dto\CarDTO.java
 D:\CarRental\car-service\car-web\src\main\java\com\carrental\dto\CarUpdateDto.java
 D:\CarRental\car-service\car-web\src\main\java\com\carrental\mapper\CarDtoMapper.java
+D:\CarRental\car-service\car-web\src\main\java\com\carrental\security\CarSecurity.java

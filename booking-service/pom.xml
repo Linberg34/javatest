@@ -9,7 +9,11 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
+
+    <groupId>com.carrental</groupId>
     <artifactId>booking-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <modules>
         <module>booking-domain</module>
@@ -23,6 +27,10 @@
             <groupId>com.carrental</groupId>
             <artifactId>common-module</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
