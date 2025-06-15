@@ -1,2 +1,3 @@
 com\carrental\Main.class
+com\carrental\repository\BookingRepository.class
 com\carrental\entity\Booking.class

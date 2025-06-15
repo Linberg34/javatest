@@ -24,7 +24,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository repo;
     private final CarStatusPort carPort;
     private final PaymentPort paymentPort;
-    private final Clock             clock;
+    private final Clock clock;
 
     @Override
     public boolean canBook(UUID carId, Instant from, Instant to) {
@@ -33,29 +33,32 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking createBooking(UUID carId, UUID userId, Instant from, Instant to) {
-
-
+        if (!canBook(carId, from, to)) {
+            throw new IllegalStateException("Car is already booked for the given period");
+        }
         var booking = new Booking();
         booking.setId(UUID.randomUUID());
         booking.setCarId(carId);
         booking.setUserId(userId);
         booking.setRentFrom(from);
         booking.setRentTo(to);
-        booking.setStatus(BookingStatus.PENDING);
+        booking.setStatus(BookingStatus.BOOKED);
         booking.setCreatedAt(Instant.now(clock));
 
         carPort.markBooked(carId);
 
+        // TODO: Kafka
+
         return repo.save(booking);
     }
+
 
     @Override
     public Booking confirmPayment(UUID bookingId) {
         Booking booking = repo.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
 
-
-        boolean ok = paymentPort.charge(bookingId, booking.getUserId(),  0);
+        boolean ok = paymentPort.charge(bookingId, booking.getUserId(), /*amount*/ 0);
         if (!ok) {
             booking.setStatus(BookingStatus.CANCELLED);
             carPort.markFree(booking.getCarId());
@@ -65,15 +68,15 @@ public class BookingServiceImpl implements BookingService {
         }
         booking.setUpdatedAt(Instant.now(clock));
 
+        // TODO:  Kafka
         return repo.save(booking);
     }
+
 
     @Override
     public Booking finishRental(UUID bookingId) {
         Booking booking = repo.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
-
-
 
         booking.setStatus(BookingStatus.COMPLETED);
         booking.setUpdatedAt(Instant.now(clock));
