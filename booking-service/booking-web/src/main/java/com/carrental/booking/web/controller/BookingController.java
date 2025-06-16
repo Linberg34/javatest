@@ -1,17 +1,17 @@
 package com.carrental.booking.web.controller;
 
+import com.carrental.booking.application.service.interfaces.BookingService;
 import com.carrental.booking.web.dto.BookingResponse;
 import com.carrental.booking.web.dto.CanBookRequest;
 import com.carrental.booking.web.dto.CreateBookingRequest;
 import com.carrental.booking.web.mapper.BookingWebMapper;
-import com.carrental.booking.application.service.interfaces.BookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -28,24 +28,53 @@ public class BookingController {
                 rq.getCarId(),
                 rq.getRentFrom(),
                 rq.getRentTo()
-
         );
         return ResponseEntity.ok(available);
     }
 
-
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public BookingResponse create(
+    public ResponseEntity<BookingResponse> create(
             @Valid @RequestBody CreateBookingRequest rq,
             Principal principal
     ) {
         UUID userId = UUID.fromString(principal.getName());
         var booking = bookingService.createBooking(
-                rq.getCarId(), userId,  rq.getRentFrom(),  rq.getRentTo()
+                rq.getCarId(), userId, rq.getRentFrom(), rq.getRentTo()
         );
-        return bookingWebMapper.toResponse(booking);
+        return ResponseEntity.accepted()
+                .body(bookingWebMapper.toResponse(booking));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BookingResponse> getById(@PathVariable UUID id) {
+        var booking = bookingService.findById(id);
+        if (booking == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(bookingWebMapper.toResponse(booking));
     }
 
 
+    @PostMapping("/{id}/finish")
+    public ResponseEntity<BookingResponse> finish(@PathVariable UUID id) {
+        var booking = bookingService.finishRental(id);
+        return ResponseEntity.ok(bookingWebMapper.toResponse(booking));
+    }
+
+
+    @GetMapping("/history/me")
+    public ResponseEntity<List<BookingResponse>> historyMe(Principal p) {
+        UUID userId = UUID.fromString(p.getName());
+        var list = bookingService.historyByUser(userId)
+                .stream().map(bookingWebMapper::toResponse).toList();
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/history/car/{carId}")
+    public ResponseEntity<List<BookingResponse>> historyByCar(@PathVariable UUID carId) {
+        var list = bookingService.historyByCar(carId)
+                .stream().map(bookingWebMapper::toResponse).toList();
+        return ResponseEntity.ok(list);
+    }
 }
+

@@ -1,3 +1,7 @@
-com\carrental\booking\domain\entity\Booking.class
 com\carrental\Main.class
+com\carrental\booking\domain\event\PaymentSucceededEvent.class
+com\carrental\booking\domain\entity\Booking.class
+com\carrental\booking\domain\event\BookingRequestedEvent.class
 com\carrental\booking\domain\repository\BookingRepository.class
+com\carrental\booking\domain\event\PaymentRequestedEvent.class
+com\carrental\booking\domain\event\CarReservedEvent.class

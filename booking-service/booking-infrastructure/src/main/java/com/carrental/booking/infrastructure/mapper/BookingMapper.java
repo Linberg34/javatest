@@ -19,6 +19,8 @@ public class BookingMapper {
         entity.setStatus(booking.getStatus());
         entity.setRentFrom(booking.getRentFrom());
         entity.setRentTo(booking.getRentTo());
+        entity.setAmount(booking.getAmount());
+        entity.setPaymentId(booking.getPaymentId());
         return entity;
     }
 
@@ -36,6 +38,9 @@ public class BookingMapper {
         booking.setCreatedAt(entity.getCreatedAt());
         booking.setUpdatedAt(entity.getUpdatedAt());
         booking.setCreatedBy(entity.getCreatedBy());
+        booking.setAmount(entity.getAmount());
+        booking.setPaymentId(entity.getPaymentId());
+
         return booking;
     }
 }

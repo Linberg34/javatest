@@ -23,6 +23,13 @@ public class BookingEntity extends BaseAuditableEntity {
     @Column(nullable = false)
     private UUID userId;
 
+    @Column(nullable = false)
+    private long amount;
+
+
+    @Column(nullable = true)
+    private UUID paymentId;
+
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 

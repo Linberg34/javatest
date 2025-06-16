@@ -1,6 +1,8 @@
+com\carrental\booking\web\config\KafkaConfig.class
 com\carrental\booking\web\mapper\BookingWebMapper.class
 com\carrental\booking\web\dto\CanBookRequest.class
 com\carrental\booking\web\dto\CreateBookingRequest.class
 com\carrental\booking\web\BookingWebApplication.class
 com\carrental\booking\web\dto\BookingResponse.class
 com\carrental\booking\web\controller\BookingController.class
+com\carrental\booking\web\config\SwaggerConfig.class

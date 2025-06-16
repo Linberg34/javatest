@@ -21,8 +21,8 @@
         <module name="booking-infrastructure" />
         <module name="car-application" />
         <module name="car-web" />
-        <module name="booking-web" />
         <module name="user-domain" />
+        <module name="booking-web" />
         <module name="api-gateway" />
         <module name="booking-domain" />
         <module name="car-domain" />

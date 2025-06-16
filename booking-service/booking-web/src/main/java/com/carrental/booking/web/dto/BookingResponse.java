@@ -9,15 +9,20 @@ import lombok.Setter;
 import java.time.Instant;
 import java.util.UUID;
 
-@Getter@Setter@NoArgsConstructor@AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookingResponse {
-    public UUID id;
-    public UUID carId;
-    public UUID userId;
-    public BookingStatus status;
-    public Instant rentFrom;
-    public Instant rentTo;
-    public Instant createdAt;
-    public Instant updatedAt;
-    public String createdBy;
+    private UUID id;
+    private UUID carId;
+    private UUID userId;
+    private BookingStatus status;
+    private Instant rentFrom;
+    private Instant rentTo;
+    private long amount;
+    private UUID paymentId;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private String createdBy;
 }

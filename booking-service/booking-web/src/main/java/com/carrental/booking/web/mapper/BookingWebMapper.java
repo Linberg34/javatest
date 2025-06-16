@@ -1,13 +1,11 @@
 package com.carrental.booking.web.mapper;
 
-
 import com.carrental.booking.web.dto.BookingResponse;
 import com.carrental.booking.domain.entity.Booking;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BookingWebMapper {
-
 
     public BookingResponse toResponse(Booking b) {
         return new BookingResponse(
@@ -17,6 +15,8 @@ public class BookingWebMapper {
                 b.getStatus(),
                 b.getRentFrom(),
                 b.getRentTo(),
+                b.getAmount(),
+                b.getPaymentId(),
                 b.getCreatedAt(),
                 b.getUpdatedAt(),
                 b.getCreatedBy()

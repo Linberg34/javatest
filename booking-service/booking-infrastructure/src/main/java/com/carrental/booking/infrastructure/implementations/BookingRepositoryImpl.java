@@ -48,7 +48,7 @@ public class BookingRepositoryImpl implements BookingRepository {
 
     @Override
     public List<Booking> findOverlapping(UUID carId, Instant from, Instant to) {
-        return springRepo.findOverlapping(carId, from, to).stream()
+        return springRepo.findByCarIdAndRentFromBeforeAndRentToAfter(carId, from, to).stream()
                 .map(mapper::toDomain)
                 .toList();
     }

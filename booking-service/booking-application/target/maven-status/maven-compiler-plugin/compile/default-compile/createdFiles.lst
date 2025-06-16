@@ -1,5 +1,3 @@
 com\carrental\booking\application\service\interfaces\BookingService.class
 com\carrental\Main.class
-com\carrental\booking\application\service\port\PaymentPort.class
-com\carrental\booking\application\service\port\CarStatusPort.class
 com\carrental\booking\application\service\implementations\BookingServiceImpl.class

@@ -13,6 +13,8 @@ public interface BookingService {
 
     Booking confirmPayment(UUID bookingId);
 
+    Booking findById(UUID bookingId);
+
     Booking finishRental(UUID bookingId);
 
     List<Booking> historyByUser(UUID userId);

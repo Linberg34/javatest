@@ -8,7 +8,8 @@ import lombok.Setter;
 import java.time.Instant;
 import java.util.UUID;
 
-@Getter @Setter
+@Getter
+@Setter
 public class Booking {
     private UUID id;
     private UUID carId;
@@ -16,9 +17,12 @@ public class Booking {
 
     private BookingStatus status;
 
+    private long amount;
+    private UUID paymentId;
+
     private Instant createdAt;
     private Instant updatedAt;
-    private String  createdBy;
+    private String createdBy;
 
     private Instant rentFrom;
     private Instant rentTo;

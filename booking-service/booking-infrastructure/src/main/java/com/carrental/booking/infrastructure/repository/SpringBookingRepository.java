@@ -12,7 +12,7 @@ public interface SpringBookingRepository extends JpaRepository<BookingEntity, UU
 
     List<BookingEntity> findByCarId(UUID carId);
 
-    List<BookingEntity> findOverlapping(
+    List<BookingEntity> findByCarIdAndRentFromBeforeAndRentToAfter(
             UUID carId,
             Instant from,
             Instant to

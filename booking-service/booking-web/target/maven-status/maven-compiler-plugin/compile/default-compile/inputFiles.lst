@@ -1,4 +1,6 @@
 D:\CarRental\booking-service\booking-web\src\main\java\com\carrental\booking\web\BookingWebApplication.java
+D:\CarRental\booking-service\booking-web\src\main\java\com\carrental\booking\web\config\KafkaConfig.java
+D:\CarRental\booking-service\booking-web\src\main\java\com\carrental\booking\web\config\SwaggerConfig.java
 D:\CarRental\booking-service\booking-web\src\main\java\com\carrental\booking\web\controller\BookingController.java
 D:\CarRental\booking-service\booking-web\src\main\java\com\carrental\booking\web\dto\BookingResponse.java
 D:\CarRental\booking-service\booking-web\src\main\java\com\carrental\booking\web\dto\CanBookRequest.java

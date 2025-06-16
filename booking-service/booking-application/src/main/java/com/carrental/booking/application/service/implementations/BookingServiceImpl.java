@@ -1,13 +1,12 @@
 package com.carrental.booking.application.service.implementations;
 
-
-import com.carrental.booking.domain.entity.Booking;
-import com.carrental.booking.domain.repository.BookingRepository;
 import com.carrental.booking.application.service.interfaces.BookingService;
-import com.carrental.booking.application.service.port.CarStatusPort;
-import com.carrental.booking.application.service.port.PaymentPort;
+import com.carrental.booking.domain.entity.Booking;
+import com.carrental.booking.domain.event.BookingRequestedEvent;
+import com.carrental.booking.domain.repository.BookingRepository;
 import com.example.common.enums.BookingStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +21,7 @@ import java.util.UUID;
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository repo;
-    private final CarStatusPort carPort;
-    private final PaymentPort paymentPort;
+    private final KafkaTemplate<String, Object> kafka;
     private final Clock clock;
 
     @Override
@@ -36,42 +34,36 @@ public class BookingServiceImpl implements BookingService {
         if (!canBook(carId, from, to)) {
             throw new IllegalStateException("Car is already booked for the given period");
         }
-        var booking = new Booking();
+
+        Booking booking = new Booking();
         booking.setId(UUID.randomUUID());
         booking.setCarId(carId);
         booking.setUserId(userId);
         booking.setRentFrom(from);
         booking.setRentTo(to);
-        booking.setStatus(BookingStatus.BOOKED);
+        booking.setAmount(calculateAmount(from, to));
+        booking.setStatus(BookingStatus.PENDING);
         booking.setCreatedAt(Instant.now(clock));
 
-        carPort.markBooked(carId);
+        repo.save(booking);
 
-        // TODO: Kafka
+        kafka.send("booking.requests",
+                new BookingRequestedEvent(
+                        booking.getId(),
+                        booking.getCarId(),
+                        booking.getUserId(),
+                        Instant.now(clock).toEpochMilli()
+                ));
 
-        return repo.save(booking);
+        return booking;
     }
-
 
     @Override
     public Booking confirmPayment(UUID bookingId) {
-        Booking booking = repo.findById(bookingId)
-                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
-
-        boolean ok = paymentPort.charge(bookingId, booking.getUserId(), /*amount*/ 0);
-        if (!ok) {
-            booking.setStatus(BookingStatus.CANCELLED);
-            carPort.markFree(booking.getCarId());
-        } else {
-            booking.setStatus(BookingStatus.RENTED);
-            carPort.markRented(booking.getCarId());
-        }
-        booking.setUpdatedAt(Instant.now(clock));
-
-        // TODO:  Kafka
-        return repo.save(booking);
+        //TODO: обработка платежа
+        throw new UnsupportedOperationException(
+                "Payment confirmation is handled asynchronously via Kafka");
     }
-
 
     @Override
     public Booking finishRental(UUID bookingId) {
@@ -80,10 +72,18 @@ public class BookingServiceImpl implements BookingService {
 
         booking.setStatus(BookingStatus.COMPLETED);
         booking.setUpdatedAt(Instant.now(clock));
+        repo.save(booking);
 
-        carPort.markFree(booking.getCarId());
-        return repo.save(booking);
+        return booking;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Booking findById(UUID bookingId) {
+        return repo.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
+    }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -95,5 +95,10 @@ public class BookingServiceImpl implements BookingService {
     @Transactional(readOnly = true)
     public List<Booking> historyByCar(UUID carId) {
         return repo.findByCarId(carId);
+    }
+
+    private long calculateAmount(Instant from, Instant to) {
+        long hours = java.time.Duration.between(from, to).toHours();
+        return hours * 1000;
     }
 }
