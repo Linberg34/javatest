@@ -4,6 +4,7 @@ D:\CarRental\common-module\src\main\java\com\example\common\dto\UserLoginRequest
 D:\CarRental\common-module\src\main\java\com\example\common\dto\UserRegistrationRequest.java
 D:\CarRental\common-module\src\main\java\com\example\common\dto\UserResponse.java
 D:\CarRental\common-module\src\main\java\com\example\common\entity\BaseAuditableEntity.java
+D:\CarRental\common-module\src\main\java\com\example\common\enums\BookingStatus.java
 D:\CarRental\common-module\src\main\java\com\example\common\enums\CarStatus.java
 D:\CarRental\common-module\src\main\java\com\example\common\enums\Role.java
 D:\CarRental\common-module\src\main\java\com\example\common\security\JwtProperties.java

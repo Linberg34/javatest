@@ -1,2 +1,6 @@
-com\carrental\BookingWebApplication.class
 com\carrental\dto\CreateBookingRequest.class
+com\carrental\BookingWebApplication.class
+com\carrental\dto\CanBookRequest.class
+com\carrental\controller\BookingController.class
+com\carrental\mapper\BookingWebMapper.class
+com\carrental\dto\BookingResponse.class

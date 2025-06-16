@@ -16,14 +16,13 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.34/lombok-1.18.34.jar" />
         </processorPath>
         <module name="user-infrastructure" />
-        <module name="common-module" />
         <module name="booking-application" />
+        <module name="common-module" />
         <module name="booking-infrastructure" />
         <module name="car-application" />
         <module name="car-web" />
         <module name="booking-web" />
         <module name="user-domain" />
-        <module name="booking-service" />
         <module name="api-gateway" />
         <module name="booking-domain" />
         <module name="car-domain" />

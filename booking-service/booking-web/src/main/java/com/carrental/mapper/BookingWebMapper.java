@@ -18,7 +18,8 @@ public class BookingWebMapper {
                 b.getRentFrom(),
                 b.getRentTo(),
                 b.getCreatedAt(),
-                b.getUpdatedAt()
+                b.getUpdatedAt(),
+                b.getCreatedBy()
         );
     }
 }

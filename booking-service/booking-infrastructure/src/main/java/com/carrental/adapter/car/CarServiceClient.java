@@ -11,10 +11,10 @@ import java.util.UUID;
 
 @FeignClient(name = "car-service", url = "${services.car.url}")
 public interface CarServiceClient {
-    @GetMapping("/api/cars/{id}/status")
+    @GetMapping("/{id}/status")
     CarStatus getStatus(@PathVariable("id") UUID carId);
 
-    @PostMapping("/api/cars/{id}/status")
+    @PostMapping("/{id}/status")
     void updateStatus(@PathVariable("id") UUID carId,
                       @RequestParam("status") CarStatus status);
 }
