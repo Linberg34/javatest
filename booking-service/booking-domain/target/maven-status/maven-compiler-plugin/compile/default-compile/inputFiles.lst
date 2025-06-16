@@ -1,3 +1,3 @@
-D:\CarRental\booking-service\booking-domain\src\main\java\com\carrental\entity\Booking.java
+D:\CarRental\booking-service\booking-domain\src\main\java\com\carrental\booking\domain\entity\Booking.java
+D:\CarRental\booking-service\booking-domain\src\main\java\com\carrental\booking\domain\repository\BookingRepository.java
 D:\CarRental\booking-service\booking-domain\src\main\java\com\carrental\Main.java
-D:\CarRental\booking-service\booking-domain\src\main\java\com\carrental\repository\BookingRepository.java
