@@ -15,16 +15,20 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.34/lombok-1.18.34.jar" />
         </processorPath>
+        <module name="payment-infrastructure" />
         <module name="user-infrastructure" />
-        <module name="common-module" />
         <module name="booking-application" />
+        <module name="common-module" />
         <module name="booking-infrastructure" />
         <module name="car-application" />
         <module name="car-web" />
-        <module name="user-domain" />
+        <module name="payment-web" />
+        <module name="payment-domain" />
         <module name="booking-web" />
+        <module name="user-domain" />
         <module name="api-gateway" />
         <module name="booking-domain" />
+        <module name="payment-application" />
         <module name="car-domain" />
         <module name="user-application" />
         <module name="user-web" />
