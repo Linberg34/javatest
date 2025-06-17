@@ -5,4 +5,6 @@ com\carrental\booking\web\dto\CreateBookingRequest.class
 com\carrental\booking\web\BookingWebApplication.class
 com\carrental\booking\web\dto\BookingResponse.class
 com\carrental\booking\web\controller\BookingController.class
+com\carrental\booking\web\config\GatewayAuthHeaderFilter.class
+com\carrental\booking\web\config\SecurityConfig.class
 com\carrental\booking\web\config\SwaggerConfig.class

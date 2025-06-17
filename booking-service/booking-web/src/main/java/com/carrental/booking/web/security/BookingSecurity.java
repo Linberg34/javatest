@@ -1,6 +1,6 @@
-package com.carrental.security;
+package com.carrental.booking.web.security;
 
-import com.carrental.service.interfaces.CarService;
+import com.carrental.booking.application.service.interfaces.BookingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,17 +11,18 @@ import java.util.UUID;
 
 @Slf4j
 @Component
-public class CarSecurity {
+public class BookingSecurity {
 
-    private final CarService svc;
 
-    public CarSecurity(CarService svc) {
+    private final BookingService svc;
+
+    public BookingSecurity(BookingService svc) {
         this.svc = svc;
     }
 
     public boolean isOwner(UUID carId) {
 
-        String owner = svc.getById(carId).getCreatedBy();
+        String owner = svc.findById(carId).getCreatedBy();
 
         String current = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .map(Authentication::getName)
@@ -31,4 +32,6 @@ public class CarSecurity {
 
         return owner.equals(current);
     }
+
+
 }

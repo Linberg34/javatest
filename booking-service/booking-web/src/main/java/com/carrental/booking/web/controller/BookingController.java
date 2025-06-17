@@ -40,6 +40,11 @@ public class BookingController {
             @Valid @RequestBody CreateBookingRequest rq,
             Principal principal
     ) {
+        boolean available = bookingService.canBook(rq.getCarId(), rq.getRentFrom(), rq.getRentTo());
+        if (!available) {
+            return (ResponseEntity<BookingResponse>) ResponseEntity.badRequest();
+        }
+
         UUID userId = UUID.fromString(principal.getName());
         var booking = bookingService.createBooking(
                 rq.getCarId(), userId, rq.getRentFrom(), rq.getRentTo()
@@ -49,7 +54,7 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') or @bookingSecurity.isOwner(#id)")
     public ResponseEntity<BookingResponse> getById(@PathVariable UUID id) {
         var booking = bookingService.findById(id);
         if (booking == null) {
@@ -60,7 +65,7 @@ public class BookingController {
 
 
     @PostMapping("/{id}/finish")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') or @bookingSecurity.isOwner(#id)")
     public ResponseEntity<BookingResponse> finish(@PathVariable UUID id) {
         var booking = bookingService.finishRental(id);
         return ResponseEntity.ok(bookingWebMapper.toResponse(booking));
