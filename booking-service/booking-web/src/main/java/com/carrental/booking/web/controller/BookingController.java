@@ -8,6 +8,7 @@ import com.carrental.booking.web.mapper.BookingWebMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -15,7 +16,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/bookings")
+@RequestMapping("/booking")
+
 @RequiredArgsConstructor
 public class BookingController {
 
@@ -33,6 +35,7 @@ public class BookingController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<BookingResponse> create(
             @Valid @RequestBody CreateBookingRequest rq,
             Principal principal
@@ -46,6 +49,7 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<BookingResponse> getById(@PathVariable UUID id) {
         var booking = bookingService.findById(id);
         if (booking == null) {
@@ -56,6 +60,7 @@ public class BookingController {
 
 
     @PostMapping("/{id}/finish")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<BookingResponse> finish(@PathVariable UUID id) {
         var booking = bookingService.finishRental(id);
         return ResponseEntity.ok(bookingWebMapper.toResponse(booking));
@@ -63,6 +68,7 @@ public class BookingController {
 
 
     @GetMapping("/history/me")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<BookingResponse>> historyMe(Principal p) {
         UUID userId = UUID.fromString(p.getName());
         var list = bookingService.historyByUser(userId)
@@ -71,6 +77,7 @@ public class BookingController {
     }
 
     @GetMapping("/history/car/{carId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<BookingResponse>> historyByCar(@PathVariable UUID carId) {
         var list = bookingService.historyByCar(carId)
                 .stream().map(bookingWebMapper::toResponse).toList();

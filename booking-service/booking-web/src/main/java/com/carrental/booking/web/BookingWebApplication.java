@@ -19,6 +19,7 @@ import java.time.Clock;
 @EntityScan(basePackages = "com.carrental.booking.infrastructure.entity")
 public class BookingWebApplication {
     public static void main(String[] args) {
+
         SpringApplication.run(BookingWebApplication.class, args);
     }
 
@@ -26,4 +27,5 @@ public class BookingWebApplication {
     public Clock clock() {
         return Clock.systemUTC();
     }
+
 }
