@@ -1,6 +1,7 @@
 package com.carrental.booking.infrastructure.implementations;
 
 import com.carrental.booking.domain.entity.Booking;
+import com.carrental.booking.infrastructure.entity.BookingEntity;
 import com.carrental.booking.infrastructure.mapper.BookingMapper;
 import com.carrental.booking.domain.repository.BookingRepository;
 import com.carrental.booking.infrastructure.repository.SpringBookingRepository;
@@ -48,8 +49,13 @@ public class BookingRepositoryImpl implements BookingRepository {
 
     @Override
     public List<Booking> findOverlapping(UUID carId, Instant from, Instant to) {
-        return springRepo.findByCarIdAndRentFromBeforeAndRentToAfter(carId, from, to).stream()
+        List<BookingEntity> entities = springRepo.findByCarId(carId);
+
+        return entities.stream()
+                .filter(e -> e.getRentFrom().isBefore(to) &&
+                        e.getRentTo().  isAfter(from))
                 .map(mapper::toDomain)
                 .toList();
     }
+
 }

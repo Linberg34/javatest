@@ -44,6 +44,7 @@ public class BookingServiceImpl implements BookingService {
         booking.setAmount(calculateAmount(from, to));
         booking.setStatus(BookingStatus.PENDING);
         booking.setCreatedAt(Instant.now(clock));
+        booking.setCreatedBy(String.valueOf(userId));
 
         repo.save(booking);
 

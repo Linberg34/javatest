@@ -3,10 +3,12 @@ package com.carrental.booking.web.controller;
 import com.carrental.booking.application.service.interfaces.BookingService;
 import com.carrental.booking.web.dto.BookingResponse;
 import com.carrental.booking.web.dto.CanBookRequest;
+import com.carrental.booking.web.dto.CanBookResponse;
 import com.carrental.booking.web.dto.CreateBookingRequest;
 import com.carrental.booking.web.mapper.BookingWebMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +27,23 @@ public class BookingController {
     private final BookingWebMapper bookingWebMapper;
 
     @PostMapping("/can-book")
-    public ResponseEntity<Boolean> canBook(@Valid @RequestBody CanBookRequest rq) {
+    public ResponseEntity<CanBookResponse> canBook(@Valid @RequestBody CanBookRequest rq) {
         boolean available = bookingService.canBook(
                 rq.getCarId(),
                 rq.getRentFrom(),
                 rq.getRentTo()
         );
-        return ResponseEntity.ok(available);
+
+        if (available) {
+            return ResponseEntity
+                    .ok(new CanBookResponse(true, "Car is available"));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(new CanBookResponse(false, "Car is already booked for the given period"));
+        }
     }
+
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
@@ -40,22 +51,27 @@ public class BookingController {
             @Valid @RequestBody CreateBookingRequest rq,
             Principal principal
     ) {
-        boolean available = bookingService.canBook(rq.getCarId(), rq.getRentFrom(), rq.getRentTo());
-        if (!available) {
-            return (ResponseEntity<BookingResponse>) ResponseEntity.badRequest();
+        if (!bookingService.canBook(rq.getCarId(), rq.getRentFrom(), rq.getRentTo())) {
+            return ResponseEntity
+                    .badRequest()
+                    .build();
         }
 
         UUID userId = UUID.fromString(principal.getName());
         var booking = bookingService.createBooking(
                 rq.getCarId(), userId, rq.getRentFrom(), rq.getRentTo()
         );
-        return ResponseEntity.accepted()
+        return ResponseEntity
+                .accepted()
                 .body(bookingWebMapper.toResponse(booking));
     }
 
+
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or @bookingSecurity.isOwner(#id)")
-    public ResponseEntity<BookingResponse> getById(@PathVariable UUID id) {
+    public ResponseEntity<BookingResponse> getById(
+            @PathVariable("id") UUID id
+    ) {
         var booking = bookingService.findById(id);
         if (booking == null) {
             return ResponseEntity.notFound().build();
@@ -66,11 +82,19 @@ public class BookingController {
 
     @PostMapping("/{id}/finish")
     @PreAuthorize("hasRole('ADMIN') or @bookingSecurity.isOwner(#id)")
-    public ResponseEntity<BookingResponse> finish(@PathVariable UUID id) {
-        var booking = bookingService.finishRental(id);
-        return ResponseEntity.ok(bookingWebMapper.toResponse(booking));
+    public ResponseEntity<BookingResponse> finish(
+            @PathVariable("id") UUID id
+    ) {
+        try {
+            var booking = bookingService.finishRental(id);
+            return ResponseEntity.ok( bookingWebMapper.toResponse(booking) );
+        } catch (IllegalArgumentException ex) {
+            if ("Booking not found".equals(ex.getMessage())) {
+                return ResponseEntity.notFound().build();
+            }
+            throw ex;
+        }
     }
-
 
     @GetMapping("/history/me")
     @PreAuthorize("isAuthenticated()")
@@ -83,10 +107,15 @@ public class BookingController {
 
     @GetMapping("/history/car/{carId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<BookingResponse>> historyByCar(@PathVariable UUID carId) {
+    public ResponseEntity<List<BookingResponse>> historyByCar(
+            @PathVariable("carId") UUID carId
+    ) {
         var list = bookingService.historyByCar(carId)
-                .stream().map(bookingWebMapper::toResponse).toList();
+                .stream()
+                .map(bookingWebMapper::toResponse)
+                .toList();
         return ResponseEntity.ok(list);
     }
+
 }
 
