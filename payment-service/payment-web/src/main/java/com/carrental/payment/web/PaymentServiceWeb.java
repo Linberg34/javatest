@@ -1,6 +1,7 @@
 package com.carrental.payment.web;
 
 
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.Authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @EnableScheduling
 @EnableKafka
+@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @EnableJpaRepositories(basePackages = "com.carrental.payment.infrastructure.repository")
 @EntityScan(basePackages     = "com.carrental.payment.infrastructure.entity")
 @SpringBootApplication(

@@ -15,7 +15,7 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Car Service API")
+                        .title("Payment Service API")
                         .version("1.0.0")
                         .description("CRUD API для платежей"))
                 .components(

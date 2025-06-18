@@ -1,4 +1,4 @@
-package com.carrental.booking.domain.event;
+package com.example.common.event;
 
 import java.util.UUID;
 

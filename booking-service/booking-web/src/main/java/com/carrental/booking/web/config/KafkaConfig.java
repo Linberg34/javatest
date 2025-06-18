@@ -22,5 +22,9 @@ public class KafkaConfig {
     public NewTopic paymentResponses() {
         return new NewTopic("payment.responses", 1, (short)1);
     }
+    @Bean
+    public NewTopic bookingPaymentConfirmed() {
+        return new NewTopic("booking.payment-confirmed", 1, (short)1);
+    }
 
 }

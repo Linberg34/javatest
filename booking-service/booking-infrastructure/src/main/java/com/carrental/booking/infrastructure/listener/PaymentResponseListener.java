@@ -1,31 +1,27 @@
 package com.carrental.booking.infrastructure.listener;
 
-import com.carrental.booking.domain.event.PaymentSucceededEvent;
-import com.carrental.booking.domain.repository.BookingRepository;
-import com.example.common.enums.BookingStatus;
+
+import com.carrental.booking.application.service.interfaces.BookingService;
+import com.example.common.event.PaymentSucceededEvent;
+import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentResponseListener {
 
-    private final BookingRepository repo;
+    private final BookingService bookingService;
 
-    public PaymentResponseListener(BookingRepository repo) {
-        this.repo = repo;
-    }
-
-    @KafkaListener(topics = "payment.responses")
+    @KafkaListener(
+            topics   = "payment.responses",
+            groupId  = "booking-service-group"
+    )
     public void onPaymentResponse(PaymentSucceededEvent ev) {
-        repo.findById(ev.bookingId())
-                .ifPresent(b -> {
-                    if (ev.success()) {
-                        b.setStatus(BookingStatus.PAID);
-                        b.setPaymentId(ev.paymentId());
-                    } else {
-                        b.setStatus(BookingStatus.FAILED);
-                    }
-                    repo.save(b);
-                });
+        if (ev.success()) {
+            bookingService.confirmPayment(ev.bookingId(), ev.paymentId());
+        } else {
+            bookingService.rejectPayment(ev.bookingId());
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.carrental.booking.infrastructure.listener;
 
 import com.carrental.booking.domain.event.CarReservedEvent;
-import com.carrental.booking.domain.event.PaymentRequestedEvent;
+import com.example.common.event.PaymentRequestedEvent;
 import com.carrental.booking.domain.repository.BookingRepository;
 import com.example.common.enums.BookingStatus;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,6 +19,8 @@ public class CarResponseListener {
         this.repo = repo;
         this.kafka = kafka;
     }
+
+
 
     @KafkaListener(topics = "booking.car-responses")
     public void onCarResponse(CarReservedEvent ev) {

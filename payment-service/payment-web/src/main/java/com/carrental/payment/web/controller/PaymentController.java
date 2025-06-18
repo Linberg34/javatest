@@ -5,12 +5,15 @@ import com.carrental.payment.application.service.interfaces.PaymentService;
 import com.carrental.payment.web.dto.requests.CreatePaymentRequest;
 import com.carrental.payment.web.dto.responses.PaymentResponse;
 import com.carrental.payment.web.mapper.PaymentWebMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +26,8 @@ public class PaymentController {
     private final PaymentWebMapper mapper;
 
     @PostMapping
+    @Operation(summary = "Создать платеж")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaymentResponse> create(
             @Valid @RequestBody CreatePaymentRequest rq
     ) {
@@ -33,24 +38,32 @@ public class PaymentController {
     }
 
     @PostMapping("/{id}/pay")
-    public ResponseEntity<PaymentResponse> pay(@PathVariable UUID id) {
+    @Operation(summary = "Оплатить")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<PaymentResponse> pay(@PathVariable("id") UUID id) {
         var paid = paymentService.pay(id);
         return ResponseEntity.ok(mapper.toResponse(paid));
     }
 
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<PaymentResponse> cancel(@PathVariable UUID id) {
+    @Operation(summary = "Отменить платеж")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<PaymentResponse> cancel(@PathVariable("id") UUID id) {
         var cancelled = paymentService.cancel(id);
         return ResponseEntity.ok(mapper.toResponse(cancelled));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PaymentResponse> getById(@PathVariable UUID id) {
+    @Operation(summary = "Получить платеж по id")
+    @PreAuthorize("hasRole('ADMIN') or @paymentSecurity.isOwner(#id)")
+    public ResponseEntity<PaymentResponse> getById(@PathVariable("id") UUID id) {
         var p = paymentService.getById(id);
         return ResponseEntity.ok(mapper.toResponse(p));
     }
 
     @GetMapping
+    @Operation(summary = "Получить все платежи(админ)")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<PaymentResponse>> getAll(
             @PageableDefault(size = 20) Pageable pageable
     ) {
@@ -60,6 +73,8 @@ public class PaymentController {
     }
 
     @GetMapping("/pending")
+    @Operation(summary = "Получить все платежи в процессе обработки(админ)")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<PaymentResponse>> getPending(
             @PageableDefault(size = 20) Pageable pageable
     ) {

@@ -5,6 +5,7 @@ import com.carrental.booking.domain.entity.Booking;
 import com.carrental.booking.domain.event.BookingRequestedEvent;
 import com.carrental.booking.domain.repository.BookingRepository;
 import com.example.common.enums.BookingStatus;
+import com.example.common.event.BookingPaymentConfirmedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -60,11 +61,39 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking confirmPayment(UUID bookingId) {
-        //TODO: обработка платежа
-        throw new UnsupportedOperationException(
-                "Payment confirmation is handled asynchronously via Kafka");
+    @Transactional
+    public Booking confirmPayment(UUID bookingId, UUID paymentId) {
+        Booking booking = repo.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
+
+        booking.setPaymentId(paymentId);
+        booking.setStatus(BookingStatus.PAID);
+        booking.setUpdatedAt(Instant.now());
+
+        Booking updated = repo.save(booking);
+
+        BookingPaymentConfirmedEvent evt = new BookingPaymentConfirmedEvent(
+                updated.getId(),
+                updated.getCarId(),
+                updated.getUserId()
+        );
+        kafka.send("booking.payment-confirmed", evt);
+
+        return updated;
     }
+
+    @Override
+    @Transactional
+    public Booking rejectPayment(UUID bookingId) {
+        Booking booking = repo.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
+        booking.setStatus(BookingStatus.FAILED);
+        booking.setUpdatedAt(Instant.now());
+        return repo.save(booking);
+    }
+
+
+
 
     @Override
     public Booking finishRental(UUID bookingId) {

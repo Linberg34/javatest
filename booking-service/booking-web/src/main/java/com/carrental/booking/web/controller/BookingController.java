@@ -6,6 +6,7 @@ import com.carrental.booking.web.dto.CanBookRequest;
 import com.carrental.booking.web.dto.CanBookResponse;
 import com.carrental.booking.web.dto.CreateBookingRequest;
 import com.carrental.booking.web.mapper.BookingWebMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class BookingController {
     private final BookingWebMapper bookingWebMapper;
 
     @PostMapping("/can-book")
+    @Operation(summary = "Проверка на возможность аренды")
     public ResponseEntity<CanBookResponse> canBook(@Valid @RequestBody CanBookRequest rq) {
         boolean available = bookingService.canBook(
                 rq.getCarId(),
@@ -47,6 +49,7 @@ public class BookingController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "Создать аренду")
     public ResponseEntity<BookingResponse> create(
             @Valid @RequestBody CreateBookingRequest rq,
             Principal principal
@@ -69,6 +72,7 @@ public class BookingController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or @bookingSecurity.isOwner(#id)")
+    @Operation(summary = "Получить аренду по id")
     public ResponseEntity<BookingResponse> getById(
             @PathVariable("id") UUID id
     ) {
@@ -82,6 +86,7 @@ public class BookingController {
 
     @PostMapping("/{id}/finish")
     @PreAuthorize("hasRole('ADMIN') or @bookingSecurity.isOwner(#id)")
+    @Operation(summary = "Завершить аренду")
     public ResponseEntity<BookingResponse> finish(
             @PathVariable("id") UUID id
     ) {
@@ -98,6 +103,7 @@ public class BookingController {
 
     @GetMapping("/history/me")
     @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "История аренды текущего пользователя")
     public ResponseEntity<List<BookingResponse>> historyMe(Principal p) {
         UUID userId = UUID.fromString(p.getName());
         var list = bookingService.historyByUser(userId)
@@ -107,6 +113,7 @@ public class BookingController {
 
     @GetMapping("/history/car/{carId}")
     @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "История аренды по машине")
     public ResponseEntity<List<BookingResponse>> historyByCar(
             @PathVariable("carId") UUID carId
     ) {

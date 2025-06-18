@@ -98,12 +98,6 @@ class BookingServiceImplTest {
         verify(kafkaTemplate, never()).send(anyString(), any());
     }
 
-    @Test
-    void confirmPayment_shouldThrowUnsupportedOperationException() {
-        UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class, () ->
-                bookingService.confirmPayment(testBookingId));
-        assertEquals("Payment confirmation is handled asynchronously via Kafka", exception.getMessage());
-    }
 
     @Test
     void finishRental_shouldReturnUpdatedBooking_whenBookingExists() {

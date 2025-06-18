@@ -11,7 +11,10 @@ public interface BookingService {
 
     Booking createBooking(UUID carId, UUID userId, Instant from, Instant to);
 
-    Booking confirmPayment(UUID bookingId);
+    Booking confirmPayment(UUID bookingId, UUID paymentId);
+
+    Booking rejectPayment(UUID bookingId);
+
 
     Booking findById(UUID bookingId);
 
