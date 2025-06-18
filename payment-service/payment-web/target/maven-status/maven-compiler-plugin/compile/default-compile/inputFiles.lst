@@ -1,3 +1,7 @@
+D:\CarRental\payment-service\payment-web\src\main\java\com\carrental\payment\web\config\GatewayAuthHeaderFilter.java
+D:\CarRental\payment-service\payment-web\src\main\java\com\carrental\payment\web\config\KafkaConfig.java
+D:\CarRental\payment-service\payment-web\src\main\java\com\carrental\payment\web\config\SecurityConfig.java
+D:\CarRental\payment-service\payment-web\src\main\java\com\carrental\payment\web\config\SwaggerConfig.java
 D:\CarRental\payment-service\payment-web\src\main\java\com\carrental\payment\web\controller\PaymentController.java
 D:\CarRental\payment-service\payment-web\src\main\java\com\carrental\payment\web\dto\requests\CreatePaymentRequest.java
 D:\CarRental\payment-service\payment-web\src\main\java\com\carrental\payment\web\dto\responses\PaymentResponse.java

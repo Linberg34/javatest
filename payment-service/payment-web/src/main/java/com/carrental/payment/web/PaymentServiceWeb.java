@@ -1,7 +1,7 @@
 package com.carrental.payment.web;
 
 
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.security.core.Authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.AuditorAware;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -20,12 +19,11 @@ import java.util.Optional;
 
 @EnableScheduling
 @EnableKafka
-@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
+@EnableJpaRepositories(basePackages = "com.carrental.payment.infrastructure.repository")
+@EntityScan(basePackages     = "com.carrental.payment.infrastructure.entity")
 @SpringBootApplication(
-        scanBasePackages = "com.carrental.booking"
+        scanBasePackages = "com.carrental.payment"
 )
-@EnableJpaRepositories(basePackages = "com.carrental.booking.infrastructure.repository")
-@EntityScan(basePackages = "com.carrental.booking.infrastructure.entity")
 public class PaymentServiceWeb {
     public static void main(String[] args) {
 
@@ -37,19 +35,19 @@ public class PaymentServiceWeb {
         return Clock.systemUTC();
     }
 
-//    @Bean
-//    public AuditorAware<String> auditorProvider() {
-//        Logger log = LoggerFactory.getLogger(PaymentServiceWeb.class);
-//        return () -> {
-//            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//            if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
-//                String userId = auth.getName();
-//                log.debug("AuditorAware: Returning userId={}", userId);
-//                return Optional.of(userId);
-//            }
-//            log.debug("AuditorAware: Returning default 'system'");
-//            return Optional.of("system");
-//        };
-//    }
+    @Bean
+    public AuditorAware<String> auditorProvider() {
+        Logger log = LoggerFactory.getLogger(PaymentServiceWeb.class);
+        return () -> {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+                String userId = auth.getName();
+                log.debug("AuditorAware: Returning userId={}", userId);
+                return Optional.of(userId);
+            }
+            log.debug("AuditorAware: Returning default 'system'");
+            return Optional.of("system");
+        };
+    }
 
 }

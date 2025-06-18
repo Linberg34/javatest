@@ -1,5 +1,9 @@
 com\carrental\payment\web\dto\responses\PaymentResponse.class
 com\carrental\payment\web\PaymentServiceWeb.class
+com\carrental\payment\web\controller\PaymentController.class
+com\carrental\payment\web\config\KafkaConfig.class
+com\carrental\payment\web\config\SwaggerConfig.class
+com\carrental\payment\web\config\GatewayAuthHeaderFilter.class
 com\carrental\payment\web\mapper\PaymentWebMapper.class
 com\carrental\payment\web\dto\requests\CreatePaymentRequest.class
-com\carrental\payment\web\controller\PaymentController.class
+com\carrental\payment\web\config\SecurityConfig.class
