@@ -23,24 +23,28 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    @Override
     @Transactional
     public Payment createPayment(UUID bookingId, long amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Amount must be positive");
+        try {
+            if (amount <= 0) {
+                throw new IllegalArgumentException("Amount must be positive");
+            }
+
+            Payment payment = new Payment();
+            payment.setBookingId(bookingId);
+            payment.setAmount(amount);
+            payment.setStatus(PaymentStatus.NEW_PAYMENT);
+            payment.setCreatedAt(Instant.now());
+            payment.setUpdatedAt(Instant.now());
+            payment.setCreatedBy("system");
+
+            Payment savedPayment = paymentRepository.save(payment);
+            log.info("Created new payment with ID: {}", savedPayment.getId());
+            return savedPayment;
+        } catch (Exception e) {
+            log.error("Ошибка при создании платежа для bookingId: {}, amount: {}", bookingId, amount, e);
+            throw e;
         }
-
-        Payment payment = new Payment();
-        payment.setBookingId(bookingId);
-        payment.setAmount(amount);
-        payment.setStatus(PaymentStatus.NEW_PAYMENT);
-        payment.setCreatedAt(Instant.now());
-        payment.setUpdatedAt(Instant.now());
-        payment.setCreatedBy("system");
-
-        Payment savedPayment = paymentRepository.save(payment);
-        log.info("Created new payment with ID: {}", savedPayment.getId());
-        return savedPayment;
     }
 
     @Override

@@ -6,7 +6,9 @@ import com.carrental.booking.domain.event.BookingRequestedEvent;
 import com.carrental.booking.domain.repository.BookingRepository;
 import com.example.common.enums.BookingStatus;
 import com.example.common.event.BookingPaymentConfirmedEvent;
+import com.example.common.event.PaymentRequestedEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -56,6 +59,17 @@ public class BookingServiceImpl implements BookingService {
                         booking.getUserId(),
                         Instant.now(clock).toEpochMilli()
                 ));
+
+        log.info("Отправка PaymentRequestedEvent: {}", new PaymentRequestedEvent(booking.getId(), booking.getUserId(), 1));
+
+        kafka.send("payment.requests",
+                new PaymentRequestedEvent(
+                        booking.getId(),
+                        booking.getUserId(),
+                        booking.getAmount()
+                ));
+        log.info("PaymentRequestedEvent отправлено в payment.requests");
+
 
         return booking;
     }
