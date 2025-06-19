@@ -1,7 +1,6 @@
 
 import com.carrental.booking.application.service.implementations.BookingServiceImpl;
 import com.carrental.booking.domain.entity.Booking;
-import com.carrental.booking.domain.event.BookingRequestedEvent;
 import com.carrental.booking.domain.repository.BookingRepository;
 import com.example.common.enums.BookingStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +13,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
