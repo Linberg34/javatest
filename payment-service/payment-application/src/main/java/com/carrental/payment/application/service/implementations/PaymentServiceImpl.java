@@ -20,6 +20,7 @@ import java.util.UUID;
 @Slf4j
 public class PaymentServiceImpl implements PaymentService {
 
+    private  final KafkaTemplate<String,Object> kafka;
     private final PaymentRepository paymentRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
@@ -41,6 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
             Payment savedPayment = paymentRepository.save(payment);
             log.info("Created new payment with ID: {}", savedPayment.getId());
             return savedPayment;
+            kafka.send("payment.new", evt);
         } catch (Exception e) {
             log.error("Ошибка при создании платежа для bookingId: {}, amount: {}", bookingId, amount, e);
             throw e;

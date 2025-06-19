@@ -1,7 +1,5 @@
 D:\CarRental\booking-service\booking-domain\src\main\java\com\carrental\booking\domain\entity\Booking.java
 D:\CarRental\booking-service\booking-domain\src\main\java\com\carrental\booking\domain\event\BookingRequestedEvent.java
 D:\CarRental\booking-service\booking-domain\src\main\java\com\carrental\booking\domain\event\CarReservedEvent.java
-D:\CarRental\booking-service\booking-domain\src\main\java\com\carrental\booking\domain\event\PaymentRequestedEvent.java
-D:\CarRental\booking-service\booking-domain\src\main\java\com\carrental\booking\domain\event\PaymentSucceededEvent.java
 D:\CarRental\booking-service\booking-domain\src\main\java\com\carrental\booking\domain\repository\BookingRepository.java
 D:\CarRental\booking-service\booking-domain\src\main\java\com\carrental\Main.java
