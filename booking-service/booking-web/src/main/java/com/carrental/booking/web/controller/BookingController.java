@@ -89,19 +89,22 @@ public class BookingController {
     @PostMapping("/{id}/finish")
     @PreAuthorize("hasRole('ADMIN') or @bookingSecurity.isOwner(#id)")
     @Operation(summary = "Завершить аренду")
-    public ResponseEntity<BookingResponse> finish(
-            @PathVariable("id") UUID id
-    ) {
+    public ResponseEntity<BookingResponse> finish(@PathVariable("id") UUID id) {
         try {
             var booking = bookingService.finishRental(id);
             return ResponseEntity.ok( bookingWebMapper.toResponse(booking) );
         } catch (IllegalArgumentException ex) {
-            if ("Booking not found".equals(ex.getMessage())) {
+            if (ex.getMessage().startsWith("Booking not found")) {
                 return ResponseEntity.notFound().build();
             }
             throw ex;
+        } catch (IllegalStateException ex) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .build();
         }
     }
+
 
     @GetMapping("/history/me")
     @PreAuthorize("isAuthenticated()")

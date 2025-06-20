@@ -136,26 +136,47 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public Booking finishRental(UUID bookingId) {
         Booking booking = repo.findById(bookingId)
-                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
+
+        if (booking.getStatus() != BookingStatus.PAID) {
+            throw new IllegalStateException(
+                    "Cannot finish rental for booking " + bookingId + " because status is " + booking.getStatus()
+            );
+        }
+
         booking.setStatus(BookingStatus.COMPLETED);
         booking.setUpdatedAt(Instant.now(clock));
-        var saved = repo.save(booking);
+        Booking saved = repo.save(booking);
+
         String email = SecurityUtils.currentUserEmail();
 
-
         kafka.send("booking.completed",
-                new BookingCompletedEvent(saved.getId(),
+                new BookingCompletedEvent(
+                        saved.getId(),
                         saved.getCarId(),
                         saved.getUserId(),
                         Instant.now(clock).toEpochMilli(),
                         email
                 )
         );
+        log.info("Sent BookingCompletedEvent for booking {}", saved.getId());
+
+        kafka.send("car.released",
+                new CarReleasedEvent(
+                        saved.getId(),
+                        saved.getCarId(),
+                        Instant.now(clock).toEpochMilli()
+                )
+        );
+        log.info("Sent CarReleasedEvent for car {}", saved.getCarId());
 
         return saved;
     }
+
+
 
     @Transactional
     public void linkPaymentToBooking(UUID bookingId, UUID paymentId) {

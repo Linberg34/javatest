@@ -28,16 +28,16 @@
         </processorPath>
         <module name="payment-infrastructure" />
         <module name="user-infrastructure" />
-        <module name="booking-application" />
         <module name="common-module" />
+        <module name="booking-application" />
         <module name="booking-infrastructure" />
         <module name="car-application" />
         <module name="notification-service" />
         <module name="payment-web" />
         <module name="car-web" />
         <module name="payment-domain" />
-        <module name="booking-web" />
         <module name="user-domain" />
+        <module name="booking-web" />
         <module name="api-gateway" />
         <module name="booking-domain" />
         <module name="payment-application" />
