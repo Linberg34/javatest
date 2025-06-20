@@ -48,6 +48,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
             ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
                     .header("X-User-Id", claims.getSubject())
+                    .header("X-User-Email", claims.get("email", String.class))
                     .build();
             ServerWebExchange mutatedExchange = exchange.mutate()
                     .request(mutatedRequest)

@@ -29,7 +29,12 @@ public class CarResponseListener {
                 b.setStatus(BookingStatus.BOOKED);
                 repo.save(b);
                 kafka.send("payment.requests",
-                        new PaymentRequestedEvent(b.getId(), b.getUserId(), b.getAmount()));
+                        new PaymentRequestedEvent(
+                                b.getId(),
+                                b.getUserId(),
+                                b.getAmount(),
+                                ev.userEmail()
+                        ));
             } else {
                 b.setStatus(BookingStatus.FAILED);
                 repo.save(b);

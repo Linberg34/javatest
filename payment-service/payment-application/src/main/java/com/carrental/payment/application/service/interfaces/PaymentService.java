@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface PaymentService {
-    Payment createPayment(UUID bookingId, long amount);
+    Payment createPayment(UUID bookingId, long amount, String userEmail);
     Payment pay(UUID paymentId);
     Payment cancel(UUID paymentId);
     Payment getById(UUID paymentId);

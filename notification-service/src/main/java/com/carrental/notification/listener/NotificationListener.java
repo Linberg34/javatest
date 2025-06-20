@@ -1,8 +1,8 @@
 package com.carrental.notification.listener;
 
-import com.carrental.notification.dto.BookingEvent;
-import com.carrental.notification.dto.PaymentEvent;
 import com.carrental.notification.service.NotificationService;
+import com.example.common.event.BookingEvent;
+import com.example.common.event.PaymentEvent;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +17,7 @@ public class NotificationListener {
 
     @KafkaListener(topics = "payment.new", containerFactory = "kafkaListenerContainerFactory")
     public void onNewPayment(PaymentEvent evt) {
+
         svc.notifyNewPayment(evt);
     }
 

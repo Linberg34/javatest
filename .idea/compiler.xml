@@ -33,14 +33,14 @@
         <module name="booking-infrastructure" />
         <module name="car-application" />
         <module name="notification-service" />
-        <module name="payment-web" />
         <module name="car-web" />
+        <module name="payment-web" />
         <module name="payment-domain" />
         <module name="booking-web" />
         <module name="user-domain" />
-        <module name="payment-application" />
         <module name="api-gateway" />
         <module name="booking-domain" />
+        <module name="payment-application" />
         <module name="car-domain" />
         <module name="user-application" />
         <module name="user-web" />

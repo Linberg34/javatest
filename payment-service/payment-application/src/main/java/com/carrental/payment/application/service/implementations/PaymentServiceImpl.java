@@ -5,6 +5,7 @@ import com.carrental.payment.domain.entity.Payment;
 import com.carrental.payment.domain.event.PaymentProcessedEvent;
 import com.carrental.payment.domain.repository.PaymentRepository;
 import com.example.common.enums.PaymentStatus;
+import com.example.common.event.PaymentEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -20,12 +21,11 @@ import java.util.UUID;
 @Slf4j
 public class PaymentServiceImpl implements PaymentService {
 
-    private  final KafkaTemplate<String,Object> kafka;
     private final PaymentRepository paymentRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Transactional
-    public Payment createPayment(UUID bookingId, long amount) {
+    public Payment createPayment(UUID bookingId, long amount, String userEmail) {
         try {
             if (amount <= 0) {
                 throw new IllegalArgumentException("Amount must be positive");
@@ -41,8 +41,10 @@ public class PaymentServiceImpl implements PaymentService {
 
             Payment savedPayment = paymentRepository.save(payment);
             log.info("Created new payment with ID: {}", savedPayment.getId());
+
+            PaymentEvent evt = new PaymentEvent(savedPayment.getId(), savedPayment.getBookingId(),userEmail);
+            kafkaTemplate.send("payment.new", evt);
             return savedPayment;
-            kafka.send("payment.new", evt);
         } catch (Exception e) {
             log.error("Ошибка при создании платежа для bookingId: {}, amount: {}", bookingId, amount, e);
             throw e;

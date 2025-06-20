@@ -1,6 +1,7 @@
 package com.carrental.booking.web.config;
 
 
+import com.example.common.util.UserPrincipal;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,12 +28,15 @@ public class GatewayAuthHeaderFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String userId = request.getHeader("X-User-Id");
-        log.debug("GatewayAuthHeaderFilter  ►  X-User-Id={}", userId);
+        String userEmail = request.getHeader("X-User-Email");
+        log.debug("AuthHeaderFilter ► X-User-Id={}  X-User-Email={}", userId, userEmail);
 
-        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (userId != null && userEmail != null &&
+                SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserPrincipal principal = new UserPrincipal(userId,userEmail);
             UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(
-                            userId,
+                            principal,
                             null,
                             List.of(new SimpleGrantedAuthority("ROLE_USER")));
 

@@ -19,6 +19,6 @@ public class PaymentRequestListener {
     )
     public void onPaymentRequested(PaymentRequestedEvent ev) {
         log.info("+++ получено PaymentRequestedEvent: {}", ev);
-        paymentService.createPayment(ev.bookingId(), ev.amount());
+        paymentService.createPayment(ev.bookingId(), ev.amount(), ev.userEmail());
     }
 }

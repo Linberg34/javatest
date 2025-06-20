@@ -81,6 +81,7 @@ class BookingServiceImplTest {
 
     @Test
     void createBooking_shouldThrowException_whenCarIsNotAvailable() {
+        String email ="123";
         Booking overlappingBooking = new Booking();
         overlappingBooking.setCarId(testCarId);
         overlappingBooking.setRentFrom(testFrom);
@@ -89,7 +90,7 @@ class BookingServiceImplTest {
                 .thenReturn(List.of(overlappingBooking));
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () ->
-                bookingService.createBooking(testCarId, testUserId, testFrom, testTo));
+                bookingService.createBooking(testCarId, testUserId, testFrom, testTo,email));
         assertEquals("Car is already booked for the given period", exception.getMessage());
         verify(bookingRepository, times(1)).findOverlapping(testCarId, testFrom, testTo);
         verify(bookingRepository, never()).save(any());

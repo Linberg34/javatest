@@ -41,6 +41,11 @@ public class JwtUtil {
                 .getBody();
     }
 
+    public String getEmailFromToken(String token) {
+        Claims claims = validateToken(token);
+        return claims.get("email", String.class);
+    }
+
     public String getSubject(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(signingKey)

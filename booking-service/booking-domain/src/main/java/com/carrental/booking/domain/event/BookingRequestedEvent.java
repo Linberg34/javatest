@@ -6,6 +6,7 @@ public record BookingRequestedEvent(
         UUID bookingId,
         UUID carId,
         UUID userId,
-        long timestamp
+        long timestamp,
+        String userEmail
 ) {
 }

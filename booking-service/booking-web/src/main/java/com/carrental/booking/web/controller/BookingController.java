@@ -6,12 +6,14 @@ import com.carrental.booking.web.dto.CanBookRequest;
 import com.carrental.booking.web.dto.CanBookResponse;
 import com.carrental.booking.web.dto.CreateBookingRequest;
 import com.carrental.booking.web.mapper.BookingWebMapper;
+import com.example.common.util.UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -52,7 +54,7 @@ public class BookingController {
     @Operation(summary = "Создать аренду")
     public ResponseEntity<BookingResponse> create(
             @Valid @RequestBody CreateBookingRequest rq,
-            Principal principal
+            @AuthenticationPrincipal UserPrincipal user
     ) {
         if (!bookingService.canBook(rq.getCarId(), rq.getRentFrom(), rq.getRentTo())) {
             return ResponseEntity
@@ -60,9 +62,10 @@ public class BookingController {
                     .build();
         }
 
-        UUID userId = UUID.fromString(principal.getName());
+        UUID userId = UUID.fromString(user.getId());
+        String userEmail = user.getEmail();
         var booking = bookingService.createBooking(
-                rq.getCarId(), userId, rq.getRentFrom(), rq.getRentTo()
+                rq.getCarId(), userId, rq.getRentFrom(), rq.getRentTo(),userEmail
         );
         return ResponseEntity
                 .accepted()

@@ -34,7 +34,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking createBooking(UUID carId, UUID userId, Instant from, Instant to) {
+    public Booking createBooking(UUID carId, UUID userId, Instant from, Instant to, String userEmail) {
         if (!canBook(carId, from, to)) {
             throw new IllegalStateException("Car is already booked for the given period");
         }
@@ -57,16 +57,18 @@ public class BookingServiceImpl implements BookingService {
                         booking.getId(),
                         booking.getCarId(),
                         booking.getUserId(),
-                        Instant.now(clock).toEpochMilli()
+                        Instant.now(clock).toEpochMilli(),
+                        userEmail
                 ));
 
-        log.info("Отправка PaymentRequestedEvent: {}", new PaymentRequestedEvent(booking.getId(), booking.getUserId(), 1));
+        log.info("Отправка PaymentRequestedEvent: {}", new PaymentRequestedEvent(booking.getId(), booking.getUserId(), 1, userEmail));
 
         kafka.send("payment.requests",
                 new PaymentRequestedEvent(
                         booking.getId(),
                         booking.getUserId(),
-                        booking.getAmount()
+                        booking.getAmount(),
+                        userEmail
                 ));
         log.info("PaymentRequestedEvent отправлено в payment.requests");
 

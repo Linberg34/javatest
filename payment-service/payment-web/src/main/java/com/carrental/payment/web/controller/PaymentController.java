@@ -5,6 +5,7 @@ import com.carrental.payment.application.service.interfaces.PaymentService;
 import com.carrental.payment.web.dto.requests.CreatePaymentRequest;
 import com.carrental.payment.web.dto.responses.PaymentResponse;
 import com.carrental.payment.web.mapper.PaymentWebMapper;
+import com.example.common.util.UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,9 +31,11 @@ public class PaymentController {
     @Operation(summary = "Создать платеж")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaymentResponse> create(
-            @Valid @RequestBody CreatePaymentRequest rq
+            @Valid @RequestBody CreatePaymentRequest rq,
+            @AuthenticationPrincipal UserPrincipal user
     ) {
-        var payment = paymentService.createPayment(rq.bookingId(), rq.amount());
+        var payment = paymentService.createPayment(rq.bookingId(), rq.amount(), user.getEmail());
+
         return ResponseEntity
                 .status(201)
                 .body(mapper.toResponse(payment));

@@ -6,6 +6,7 @@ import java.util.UUID;
 public record PaymentRequestedEvent(
         UUID bookingId,
         UUID userId,
-        long amount
+        long amount,
+        String userEmail
 ) {
 }

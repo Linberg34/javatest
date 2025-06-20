@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public record CarReservedEvent(
         UUID bookingId,
-        boolean success
+        boolean success,
+        String userEmail
 ) {
 }

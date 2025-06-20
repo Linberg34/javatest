@@ -50,6 +50,7 @@ class PaymentServiceTest {
     @Test
     void createPayment_ValidInput_ReturnsSavedPayment() {
         long amount = 1000L;
+        String email = "testEmail";
         Payment expectedPayment = new Payment();
         expectedPayment.setId(paymentId);
         expectedPayment.setBookingId(bookingId);
@@ -61,7 +62,7 @@ class PaymentServiceTest {
 
         when(paymentRepository.save(any(Payment.class))).thenReturn(expectedPayment);
 
-        Payment result = paymentService.createPayment(bookingId, amount);
+        Payment result = paymentService.createPayment(bookingId, amount,email);
 
         assertNotNull(result);
         assertEquals(paymentId, result.getId());
@@ -78,10 +79,11 @@ class PaymentServiceTest {
     @Test
     void createPayment_NonPositiveAmount_ThrowsIllegalArgumentException() {
         long invalidAmount = 0L;
+        String email = "testEmail";
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> paymentService.createPayment(bookingId, invalidAmount)
+                () -> paymentService.createPayment(bookingId, invalidAmount, email)
         );
         assertEquals("Amount must be positive", exception.getMessage());
         verify(paymentRepository, never()).save(any());
