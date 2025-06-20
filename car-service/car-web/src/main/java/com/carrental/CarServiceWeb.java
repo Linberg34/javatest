@@ -1,5 +1,6 @@
 package com.carrental;
 
+import com.example.common.util.UserPrincipal;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,13 @@ public class CarServiceWeb {
     public AuditorAware<String> auditorProvider() {
         return () -> Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .filter(Authentication::isAuthenticated)
-                .map(Authentication::getName)
+                .map(auth -> {
+                    Object principal = auth.getPrincipal();
+                    if (principal instanceof UserPrincipal up) {
+                        return up.getEmail();
+                    }
+                    return auth.getName();
+                })
                 .or(() -> Optional.of("system"));
     }
 }

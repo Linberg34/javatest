@@ -59,6 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found: " + paymentId));
 
+        String userEmail = SecurityUtils.currentUserEmail();
         if (!payment.getStatus().equals(PaymentStatus.NEW_PAYMENT)) {
             throw new IllegalStateException("Payment can only be processed if it is new");
         }
@@ -76,7 +77,15 @@ public class PaymentServiceImpl implements PaymentService {
                     payment.getAmount(),
                     Instant.now()
             );
-            kafkaTemplate.send("payment.processed", event);
+            kafkaTemplate.send("payment.responses",
+                    new PaymentSucceededEvent(
+                            updatedPayment.getBookingId(),
+                            true,
+                            updatedPayment.getId(),
+                            userEmail
+
+                    )
+            );
             log.info("Payment processed and event sent for payment ID: {}", paymentId);
 
             return updatedPayment;

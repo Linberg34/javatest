@@ -147,6 +147,14 @@ public class BookingServiceImpl implements BookingService {
         return saved;
     }
 
+    @Transactional
+    public void linkPaymentToBooking(UUID bookingId, UUID paymentId) {
+        Booking booking = repo.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
+        booking.setPaymentId(paymentId);
+        repo.save(booking);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Booking findById(UUID bookingId) {

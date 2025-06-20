@@ -4,9 +4,11 @@ import com.carrental.entities.Car;
 import com.carrental.repository.CarRepository;
 import com.carrental.service.interfaces.CarService;
 import com.example.common.enums.CarStatus;
+import com.example.common.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,6 +41,10 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car create(Car car) {
         car.setStatus(CarStatus.FREE);
+        String email = SecurityUtils.currentUserEmail();
+        car.setCreatedBy(email);
+        car.setCreatedAt(Instant.now());
+        car.setUpdatedAt(Instant.now());
         return repo.save(car);
     }
 

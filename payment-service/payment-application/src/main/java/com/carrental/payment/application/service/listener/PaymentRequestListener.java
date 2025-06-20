@@ -17,16 +17,14 @@ import org.springframework.stereotype.Service;
 public class PaymentRequestListener {
     private final PaymentService paymentService;
 
-    @KafkaListener(
-            topics = "payment.requests",
-            groupId = "payment-service-group"
-    )
+    @KafkaListener(topics = "payment.requests", groupId = "payment-service-group",
+            containerFactory = "kafkaListenerContainerFactory")
     public void onPaymentRequested(PaymentRequestedEvent ev) {
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                ev.userId().toString(), null, AuthorityUtils.NO_AUTHORITIES
+        paymentService.createPayment(
+                ev.bookingId(),
+                ev.amount(),
+                ev.userEmail(),
+                ev.userId()
         );
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        paymentService.createPayment(ev.bookingId(), ev.amount(), ev.userEmail(), ev.userId());
-        SecurityContextHolder.clearContext();
     }
 }

@@ -26,12 +26,13 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/auth/login",
-                                "/users/register",
-                                "/register",
+                                "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/cars/**",
-                                "/v3/api-docs/**").permitAll()
+                                "/swagger-ui.html",
+                                "/auth/login",
+                                "/auth/register",
+                                "/auth/refresh"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 );
         http.addFilterBefore(

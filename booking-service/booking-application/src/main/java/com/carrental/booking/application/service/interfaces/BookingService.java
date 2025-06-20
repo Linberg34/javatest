@@ -15,6 +15,7 @@ public interface BookingService {
 
     Booking rejectPayment(UUID bookingId, String userEmail);
 
+    void linkPaymentToBooking(UUID bookingId, UUID paymentId);
 
     Booking findById(UUID bookingId);
 
