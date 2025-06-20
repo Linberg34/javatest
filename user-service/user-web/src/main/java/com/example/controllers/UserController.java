@@ -61,7 +61,7 @@ public class UserController {
                     @ApiResponse(responseCode = "200", description = "Успешно")
             }
     )
-    public UserResponse getById(@RequestParam(name = "id", required = true) UUID id) {
+    public UserResponse getById(@PathVariable("id") UUID id) {
         return UserDtoMapper.toResponse(
                 userService.getById(id)
         );
@@ -123,7 +123,7 @@ public class UserController {
             }
     )
     public void deleteByAdmin(
-            @RequestParam(name = "id", required = true) UUID id
+            @PathVariable("id") UUID id
     ) {
         userService.delete(id);
     }
