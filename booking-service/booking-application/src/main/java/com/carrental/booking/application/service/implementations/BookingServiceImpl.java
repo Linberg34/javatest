@@ -5,10 +5,7 @@ import com.carrental.booking.domain.entity.Booking;
 import com.carrental.booking.domain.event.BookingRequestedEvent;
 import com.carrental.booking.domain.repository.BookingRepository;
 import com.example.common.enums.BookingStatus;
-import com.example.common.event.BookingCancelledEvent;
-import com.example.common.event.BookingCompletedEvent;
-import com.example.common.event.PaymentRequestedEvent;
-import com.example.common.event.BookingPaymentConfirmedEvent;
+import com.example.common.event.*;
 import com.example.common.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +63,16 @@ public class BookingServiceImpl implements BookingService {
                         Instant.now(clock).toEpochMilli(),
                         email
                 ));
+        kafka.send(
+                "car.booked",
+                new CarBookedEvent(
+                        savedBooking.getId(),
+                        savedBooking.getCarId(),
+                        savedBooking.getUserId(),
+                        Instant.now(clock).toEpochMilli()
+                )
+        );
+        log.info("Sent CarBookedEvent for bookingId={}", savedBooking.getId());
 
         log.info("Отправка PaymentRequestedEvent: {}", new PaymentRequestedEvent(savedBooking.getId(), savedBooking.getUserId(), 1, email));
 
