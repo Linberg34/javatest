@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -27,23 +28,35 @@ public class GatewayAuthHeaderFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws ServletException, IOException {
 
-        String userId = request.getHeader("X-User-Id");
+        String userId    = request.getHeader("X-User-Id");
         String userEmail = request.getHeader("X-User-Email");
-        log.debug("AuthHeaderFilter ► X-User-Id={}  X-User-Email={}", userId, userEmail);
+        String rolesHeader = request.getHeader("X-User-Roles");
 
-        if (userId != null && userEmail != null &&
-                SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserPrincipal principal = new UserPrincipal(userId,userEmail);
+        log.debug("AuthHeaderFilter ► X-User-Id={}  X-User-Email={}  X-User-Roles={}",
+                userId, userEmail, rolesHeader);
+
+        if (userId != null && userEmail != null
+                && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            if (rolesHeader != null && !rolesHeader.isBlank()) {
+                for (String role : rolesHeader.split(",")) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+                }
+            } else {
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            }
+
+            UserPrincipal principal = new UserPrincipal(userId, userEmail);
+
             UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(
-                            principal,
-                            null,
-                            List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                    new UsernamePasswordAuthenticationToken(principal, null, authorities);
 
             auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(auth);
 
-            log.debug("User authenticated  ►  principal={}", auth.getName());
+            log.debug("User authenticated ► principal={} authorities={}",
+                    auth.getName(), authorities);
         }
 
         chain.doFilter(request, response);

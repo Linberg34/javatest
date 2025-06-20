@@ -47,7 +47,7 @@ public class CarController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Получить автомобиль по ID")
-    public CarDTO getById( @PathVariable("id") UUID id) {
+    public CarDTO getById(@PathVariable("id") UUID id) {
         return CarDtoMapper.toDto(carService.getById(id));
     }
 
@@ -56,7 +56,6 @@ public class CarController {
     @Operation(summary = "Создать новый автомобиль")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CarDTO> create(@Valid @RequestBody CarCreateDto dto) {
-        System.out.println("DTO Values: make=" + dto.getMake() + ", model=" + dto.getModel() + ", plateNumber=" + dto.getPlateNumber());
         var created = carService.create(CarDtoMapper.fromCreate(dto));
         return ResponseEntity
                 .created(URI.create("/cars/" + created.getId()))
@@ -77,7 +76,7 @@ public class CarController {
     @PostMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN') or @carSecurity.isOwner(#id)")
     @Operation(summary = "Изменить статус автомобиля")
-    public CarDTO changeStatus( @PathVariable("id") UUID id,
+    public CarDTO changeStatus(@PathVariable("id") UUID id,
                                @RequestParam CarStatus status) {
         return CarDtoMapper.toDto(carService.changeStatus(id, status));
     }

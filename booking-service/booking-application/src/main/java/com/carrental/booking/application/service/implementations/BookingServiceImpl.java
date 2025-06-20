@@ -7,8 +7,8 @@ import com.carrental.booking.domain.repository.BookingRepository;
 import com.example.common.enums.BookingStatus;
 import com.example.common.event.BookingCancelledEvent;
 import com.example.common.event.BookingCompletedEvent;
-import com.example.common.event.BookingPaymentConfirmedEvent;
 import com.example.common.event.PaymentRequestedEvent;
+import com.example.common.event.BookingPaymentConfirmedEvent;
 import com.example.common.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -127,12 +127,13 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking finishRental(UUID bookingId) {
-        String email = SecurityUtils.currentUserEmail();
         Booking booking = repo.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
         booking.setStatus(BookingStatus.COMPLETED);
         booking.setUpdatedAt(Instant.now(clock));
         var saved = repo.save(booking);
+        String email = SecurityUtils.currentUserEmail();
+
 
         kafka.send("booking.completed",
                 new BookingCompletedEvent(saved.getId(),

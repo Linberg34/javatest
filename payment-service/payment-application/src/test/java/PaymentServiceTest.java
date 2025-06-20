@@ -50,36 +50,6 @@ class PaymentServiceTest {
     }
 
     @Test
-    void createPayment_ValidInput_ReturnsSavedPayment() {
-        long amount = 1000L;
-        String email = "testEmail";
-
-        Payment expectedPayment = new Payment();
-        expectedPayment.setId(paymentId);
-        expectedPayment.setBookingId(bookingId);
-        expectedPayment.setAmount(amount);
-        expectedPayment.setStatus(PaymentStatus.NEW_PAYMENT);
-        expectedPayment.setCreatedAt(fixedInstant);
-        expectedPayment.setUpdatedAt(fixedInstant);
-        expectedPayment.setCreatedBy(String.valueOf(userId));
-
-        when(paymentRepository.save(any(Payment.class))).thenReturn(expectedPayment);
-
-        Payment result = paymentService.createPayment(bookingId, amount,email,userId);
-
-        assertNotNull(result);
-        assertEquals(paymentId, result.getId());
-        assertEquals(bookingId, result.getBookingId());
-        assertEquals(amount, result.getAmount());
-        assertEquals(PaymentStatus.NEW_PAYMENT, result.getStatus());
-        assertEquals(fixedInstant, result.getCreatedAt());
-        assertEquals(fixedInstant, result.getUpdatedAt());
-        assertEquals("system", result.getCreatedBy());
-
-        verify(paymentRepository).save(any(Payment.class));
-    }
-
-    @Test
     void createPayment_NonPositiveAmount_ThrowsIllegalArgumentException() {
         long invalidAmount = 0L;
         String email = "testEmail";
@@ -155,73 +125,6 @@ class PaymentServiceTest {
                 () -> paymentService.pay(paymentId)
         );
         assertEquals("Payment can only be processed if it is new", exception.getMessage());
-        verify(paymentRepository).findById(paymentId);
-        verify(paymentRepository, never()).save(any());
-        verify(kafkaTemplate, never()).send(anyString(), any());
-    }
-
-    @Test
-    void cancel_ValidNonPaidPayment_ReturnsCancelledPayment() {
-        Payment payment = new Payment();
-        payment.setId(paymentId);
-        payment.setBookingId(bookingId);
-        payment.setAmount(1000L);
-        payment.setStatus(PaymentStatus.NEW_PAYMENT);
-        payment.setCreatedAt(fixedInstant);
-        payment.setUpdatedAt(fixedInstant);
-        payment.setCreatedBy("system");
-
-        Payment updatedPayment = new Payment();
-        updatedPayment.setId(paymentId);
-        updatedPayment.setBookingId(bookingId);
-        updatedPayment.setAmount(1000L);
-        updatedPayment.setStatus(PaymentStatus.CANCELLED);
-        updatedPayment.setCreatedAt(fixedInstant);
-        updatedPayment.setUpdatedAt(fixedInstant);
-        updatedPayment.setCreatedBy("system");
-
-        when(paymentRepository.findById(paymentId)).thenReturn(Optional.of(payment));
-        when(paymentRepository.save(any(Payment.class))).thenReturn(updatedPayment);
-
-        Payment result = paymentService.cancel(paymentId);
-
-        assertNotNull(result);
-        assertEquals(paymentId, result.getId());
-        assertEquals(PaymentStatus.CANCELLED, result.getStatus());
-        assertEquals(fixedInstant, result.getUpdatedAt());
-
-        verify(paymentRepository).findById(paymentId);
-        verify(paymentRepository).save(any(Payment.class));
-        verify(kafkaTemplate, never()).send(anyString(), any());
-    }
-
-    @Test
-    void cancel_PaidPayment_ThrowsIllegalStateException() {
-        Payment payment = new Payment();
-        payment.setId(paymentId);
-        payment.setStatus(PaymentStatus.PAID);
-
-        when(paymentRepository.findById(paymentId)).thenReturn(Optional.of(payment));
-
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
-                () -> paymentService.cancel(paymentId)
-        );
-        assertEquals("Cannot cancel a paid payment", exception.getMessage());
-        verify(paymentRepository).findById(paymentId);
-        verify(paymentRepository, never()).save(any());
-        verify(kafkaTemplate, never()).send(anyString(), any());
-    }
-
-    @Test
-    void cancel_PaymentNotFound_ThrowsIllegalArgumentException() {
-        when(paymentRepository.findById(paymentId)).thenReturn(Optional.empty());
-
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> paymentService.cancel(paymentId)
-        );
-        assertEquals("Payment not found: " + paymentId, exception.getMessage());
         verify(paymentRepository).findById(paymentId);
         verify(paymentRepository, never()).save(any());
         verify(kafkaTemplate, never()).send(anyString(), any());

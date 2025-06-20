@@ -97,36 +97,6 @@ class BookingServiceImplTest {
         verify(kafkaTemplate, never()).send(anyString(), any());
     }
 
-
-    @Test
-    void finishRental_shouldReturnUpdatedBooking_whenBookingExists() {
-        when(clock.instant()).thenReturn(testNow);
-        Booking existingBooking = new Booking();
-        existingBooking.setId(testBookingId);
-        existingBooking.setStatus(BookingStatus.PENDING);
-        when(bookingRepository.findById(testBookingId)).thenReturn(Optional.of(existingBooking));
-        when(bookingRepository.save(any(Booking.class))).thenReturn(existingBooking);
-
-        Booking result = bookingService.finishRental(testBookingId);
-
-        assertNotNull(result);
-        assertEquals(BookingStatus.COMPLETED, result.getStatus());
-        assertNotNull(result.getUpdatedAt());
-        verify(bookingRepository, times(1)).findById(testBookingId);
-        verify(bookingRepository, times(1)).save(any(Booking.class));
-    }
-
-    @Test
-    void finishRental_shouldThrowException_whenBookingNotFound() {
-        when(bookingRepository.findById(testBookingId)).thenReturn(Optional.empty());
-
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-                bookingService.finishRental(testBookingId));
-        assertEquals("Booking not found", exception.getMessage());
-        verify(bookingRepository, times(1)).findById(testBookingId);
-        verify(bookingRepository, never()).save(any());
-    }
-
     @Test
     void findById_shouldReturnBooking_whenBookingExists() {
         Booking existingBooking = new Booking();

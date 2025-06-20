@@ -1,6 +1,7 @@
 package com.application.security;
 
 import com.application.service.interfaces.TokenService;
+import com.example.common.enums.Role;
 import com.example.common.security.JwtProperties;
 import com.example.entities.User;
 import io.jsonwebtoken.*;
@@ -9,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtProvider implements TokenService {
@@ -29,13 +30,24 @@ public class JwtProvider implements TokenService {
         String subject = user.getId() != null
                 ? user.getId().toString()
                 : UUID.randomUUID().toString();
+
+        Set<Role> roles = user.getRoles() != null
+                ? user.getRoles()
+                : Collections.emptySet();
+
+        List<String> rolesList = roles.stream()
+                .map(Role::name)
+                .collect(Collectors.toList());
+
         return Jwts.builder()
                 .setSubject(subject)
                 .claim("email", user.getEmail())
+                .claim("roles", roles)
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     @Override
     public String generateRefreshToken(User user) {

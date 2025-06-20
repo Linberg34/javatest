@@ -1,5 +1,6 @@
 package com.carrental.config;
 
+import com.example.common.util.UserPrincipal;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,9 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 @Slf4j
-
 @Component
 public class GatewayAuthHeaderFilter extends OncePerRequestFilter {
 
@@ -25,20 +26,35 @@ public class GatewayAuthHeaderFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws ServletException, IOException {
 
-        String userId = request.getHeader("X-User-Id");
-        log.debug("GatewayAuthHeaderFilter  ►  X-User-Id={}", userId);
+        String userId    = request.getHeader("X-User-Id");
+        String userEmail = request.getHeader("X-User-Email");
+        String rolesHeader = request.getHeader("X-User-Roles");
 
-        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        log.debug("AuthHeaderFilter ► X-User-Id={}  X-User-Email={}  X-User-Roles={}",
+                userId, userEmail, rolesHeader);
+
+        if (userId != null && userEmail != null
+                && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            if (rolesHeader != null && !rolesHeader.isBlank()) {
+                for (String role : rolesHeader.split(",")) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+                }
+            } else {
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            }
+
+            UserPrincipal principal = new UserPrincipal(userId, userEmail);
+
             UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(
-                            userId,
-                            null,
-                            List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                    new UsernamePasswordAuthenticationToken(principal, null, authorities);
 
             auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(auth);
 
-            log.debug("User authenticated  ►  principal={}", auth.getName());
+            log.debug("User authenticated ► principal={} authorities={}",
+                    auth.getName(), authorities);
         }
 
         chain.doFilter(request, response);

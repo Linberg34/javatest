@@ -1,6 +1,4 @@
 D:\CarRental\notification-service\src\main\java\com\carrental\notification\config\WebSocketConfig.java
-D:\CarRental\notification-service\src\main\java\com\carrental\notification\dto\BookingEvent.java
-D:\CarRental\notification-service\src\main\java\com\carrental\notification\dto\PaymentEvent.java
 D:\CarRental\notification-service\src\main\java\com\carrental\notification\listener\NotificationListener.java
 D:\CarRental\notification-service\src\main\java\com\carrental\notification\NotificationServiceWeb.java
 D:\CarRental\notification-service\src\main\java\com\carrental\notification\service\NotificationService.java

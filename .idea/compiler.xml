@@ -33,8 +33,8 @@
         <module name="booking-infrastructure" />
         <module name="car-application" />
         <module name="notification-service" />
-        <module name="car-web" />
         <module name="payment-web" />
+        <module name="car-web" />
         <module name="payment-domain" />
         <module name="booking-web" />
         <module name="user-domain" />

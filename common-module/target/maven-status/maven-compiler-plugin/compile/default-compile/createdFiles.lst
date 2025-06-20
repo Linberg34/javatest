@@ -1,7 +1,9 @@
 com\example\common\dto\UserResponse.class
+com\example\common\event\BookingCompletedEvent.class
 com\example\common\security\JwtProperties.class
 com\example\common\enums\Role.class
 com\example\common\enums\BookingStatus.class
+com\example\common\event\BookingCancelledEvent.class
 com\example\common\enums\CarStatus.class
 com\example\common\dto\AuthResponse.class
 com\example\common\dto\RefreshTokenRequest.class
@@ -11,7 +13,11 @@ com\example\common\util\TokenPair.class
 com\example\common\security\JwtUtil.class
 com\example\CommonModule.class
 com\example\common\dto\UserRegistrationRequest.class
+com\example\common\security\SecurityUtils.class
+com\example\common\event\PaymentEvent.class
 com\example\common\entity\BaseAuditableEntity.class
 com\example\common\event\PaymentRequestedEvent.class
 com\example\common\dto\UserLoginRequest.class
 com\example\common\event\BookingPaymentConfirmedEvent.class
+com\example\common\util\UserPrincipal.class
+com\example\common\event\BookingEvent.class

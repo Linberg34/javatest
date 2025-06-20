@@ -16,6 +16,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class AuthenticationFilter implements GlobalFilter, Ordered {
 
@@ -30,7 +33,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         HttpMethod method = exchange.getRequest().getMethod();
 
         if (path.startsWith("/auth/") ||
-                (HttpMethod.POST.equals(method) && path.equals("/users/register"))) {
+                (HttpMethod.POST.equals(method) && path.equals("/users/register")) ||
+                (HttpMethod.GET.equals(method) && path.equals("/cars")) ||
+                (HttpMethod.GET.equals(method) && path.equals("/cars/available"))
+        ) {
             return chain.filter(exchange);
         }
 
@@ -45,10 +51,16 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         try {
             Claims claims = jwtUtil.validateToken(token);
             log.debug("JWT validated, subject={}", claims.getSubject());
+            List<String> roles = claims.get("roles", List.class);
+            String rolesHeader = roles == null
+                    ? ""
+                    : roles.stream().collect(Collectors.joining(","));
+
 
             ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
                     .header("X-User-Id", claims.getSubject())
                     .header("X-User-Email", claims.get("email", String.class))
+                    .header("X-User-Roles", rolesHeader)
                     .build();
             ServerWebExchange mutatedExchange = exchange.mutate()
                     .request(mutatedRequest)
