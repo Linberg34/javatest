@@ -6,6 +6,8 @@ import com.carrental.payment.domain.event.PaymentProcessedEvent;
 import com.carrental.payment.domain.repository.PaymentRepository;
 import com.example.common.enums.PaymentStatus;
 import com.example.common.event.PaymentEvent;
+import com.example.common.event.PaymentSucceededEvent;
+import com.example.common.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -42,7 +44,7 @@ public class PaymentServiceImpl implements PaymentService {
             Payment savedPayment = paymentRepository.save(payment);
             log.info("Created new payment with ID: {}", savedPayment.getId());
 
-            PaymentEvent evt = new PaymentEvent(savedPayment.getId(), savedPayment.getBookingId(),userEmail);
+            PaymentEvent evt = new PaymentEvent(savedPayment.getId(), savedPayment.getBookingId(), userEmail);
             kafkaTemplate.send("payment.new", evt);
             return savedPayment;
         } catch (Exception e) {
@@ -87,19 +89,31 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public Payment cancel(UUID paymentId) {
-        Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new IllegalArgumentException("Payment not found: " + paymentId));
+        String email = SecurityUtils.currentUserEmail();
 
-        if (payment.getStatus().equals(PaymentStatus.PAID)) {
+        var payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new IllegalArgumentException("Payment not found: " + paymentId));
+        if (payment.getStatus() == PaymentStatus.PAID) {
             throw new IllegalStateException("Cannot cancel a paid payment");
         }
-
         payment.setStatus(PaymentStatus.CANCELLED);
         payment.setUpdatedAt(Instant.now());
-        Payment updatedPayment = paymentRepository.save(payment);
-        log.info("Cancelled payment with ID: {}", paymentId);
-        return updatedPayment;
+        var updated = paymentRepository.save(payment);
+
+        kafkaTemplate.send("payment.responses",
+                new PaymentSucceededEvent(
+                        updated.getBookingId(),
+                        false,
+                        updated.getId(),
+                        email
+
+                )
+        );
+
+        log.info("Cancelled payment with ID: {}, sent failure event to payment.responses", paymentId);
+        return updated;
     }
+
 
     @Override
     @Transactional(readOnly = true)

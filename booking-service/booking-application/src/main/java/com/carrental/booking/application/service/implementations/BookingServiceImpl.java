@@ -5,8 +5,11 @@ import com.carrental.booking.domain.entity.Booking;
 import com.carrental.booking.domain.event.BookingRequestedEvent;
 import com.carrental.booking.domain.repository.BookingRepository;
 import com.example.common.enums.BookingStatus;
+import com.example.common.event.BookingCancelledEvent;
+import com.example.common.event.BookingCompletedEvent;
 import com.example.common.event.BookingPaymentConfirmedEvent;
 import com.example.common.event.PaymentRequestedEvent;
+import com.example.common.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -101,26 +104,45 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public Booking rejectPayment(UUID bookingId) {
+        String email = SecurityUtils.currentUserEmail();
+
         Booking booking = repo.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
         booking.setStatus(BookingStatus.FAILED);
-        booking.setUpdatedAt(Instant.now());
-        return repo.save(booking);
+        booking.setUpdatedAt(Instant.now(clock));
+        var saved = repo.save(booking);
+
+        kafka.send("booking.cancelled",
+                new BookingCancelledEvent(saved.getId(),
+                        saved.getCarId(),
+                        saved.getUserId(),
+                        Instant.now(clock).toEpochMilli(),
+                        email
+                        )
+        );
+
+        return saved;
     }
-
-
-
 
     @Override
     public Booking finishRental(UUID bookingId) {
+        String email = SecurityUtils.currentUserEmail();
         Booking booking = repo.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
-
         booking.setStatus(BookingStatus.COMPLETED);
         booking.setUpdatedAt(Instant.now(clock));
-        repo.save(booking);
+        var saved = repo.save(booking);
 
-        return booking;
+        kafka.send("booking.completed",
+                new BookingCompletedEvent(saved.getId(),
+                        saved.getCarId(),
+                        saved.getUserId(),
+                        Instant.now(clock).toEpochMilli(),
+                        email
+                        )
+        );
+
+        return saved;
     }
 
     @Override

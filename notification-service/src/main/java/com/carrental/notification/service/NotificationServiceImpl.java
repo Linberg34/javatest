@@ -1,6 +1,7 @@
 package com.carrental.notification.service;
 
-import com.example.common.event.BookingEvent;
+import com.example.common.event.BookingCancelledEvent;
+import com.example.common.event.BookingCompletedEvent;
 import com.example.common.event.PaymentEvent;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -27,17 +28,17 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void notifyBookingCancelled(BookingEvent evt) {
-        String msg = "Бронирование #" + evt.getBookingId() + " отменено";
+    public void notifyBookingCancelled(BookingCancelledEvent evt) {
+        String msg = "Бронирование #" + evt.bookingId() + " отменено";
         wsTemplate.convertAndSend("/topic/notifications", msg);
-        sendEmail(evt.getUserEmail(), "Бронирование отменено", msg);
+        sendEmail(evt.userEmail(), "Бронирование отменено", msg);
     }
 
     @Override
-    public void notifyBookingCompleted(BookingEvent evt) {
-        String msg = "Аренда оформлена, бронирование #" + evt.getBookingId();
+    public void notifyBookingCompleted(BookingCompletedEvent evt) {
+        String msg = "Аренда оформлена, бронирование #" + evt.bookingId();
         wsTemplate.convertAndSend("/topic/notifications", msg);
-        sendEmail(evt.getUserEmail(), "Аренда автомобиля", msg);
+        sendEmail(evt.userEmail(), "Аренда автомобиля", msg);
     }
 
     private void sendEmail(String to, String subj, String body) {
