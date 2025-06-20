@@ -10,10 +10,12 @@ import com.example.common.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +29,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository repo;
     private final KafkaTemplate<String, Object> kafka;
     private final Clock clock;
+    private final Duration PAYMENT_TIMEOUT = Duration.ofMinutes(15);
 
     @Override
     public boolean canBook(UUID carId, Instant from, Instant to) {
@@ -126,7 +129,7 @@ public class BookingServiceImpl implements BookingService {
                         saved.getUserId(),
                         Instant.now(clock).toEpochMilli(),
                         userEmail
-                        )
+                )
         );
 
         return saved;
@@ -148,7 +151,7 @@ public class BookingServiceImpl implements BookingService {
                         saved.getUserId(),
                         Instant.now(clock).toEpochMilli(),
                         email
-                        )
+                )
         );
 
         return saved;
@@ -182,8 +185,34 @@ public class BookingServiceImpl implements BookingService {
         return repo.findByCarId(carId);
     }
 
+    @Override
+    @Scheduled(fixedDelayString = "${booking.expire-interval-ms:300000}")
+    @Transactional
+    public void expirePendingBookings() {
+        Instant cutoff = Instant.now(clock).minus(PAYMENT_TIMEOUT);
+        List<Booking> toExpire = repo.findByStatusAndCreatedAtBefore(BookingStatus.PENDING, cutoff);
+
+        for (Booking booking : toExpire) {
+            booking.setStatus(BookingStatus.CANCELLED);
+            booking.setUpdatedAt(Instant.now(clock));
+            repo.save(booking);
+
+            kafka.send("booking.expired",
+                    new BookingExpiredEvent(
+                            booking.getId(),
+                            booking.getCarId(),
+                            Instant.now(clock).toEpochMilli()
+                    )
+            );
+            log.info("Expired booking {}, sent BookingExpiredEvent", booking.getId());
+        }
+    }
+
+
     private long calculateAmount(Instant from, Instant to) {
         long hours = java.time.Duration.between(from, to).toHours();
         return hours * 1000;
     }
+
+
 }

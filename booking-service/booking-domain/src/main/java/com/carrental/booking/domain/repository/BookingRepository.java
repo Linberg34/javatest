@@ -1,6 +1,7 @@
 package com.carrental.booking.domain.repository;
 
 import com.carrental.booking.domain.entity.Booking;
+import com.example.common.enums.BookingStatus;
 
 import java.time.Instant;
 import java.util.List;
@@ -13,4 +14,5 @@ public interface BookingRepository {
     List<Booking> findByUserId(UUID userId);
     List<Booking> findByCarId(UUID carId);
     List<Booking> findOverlapping(UUID carId, Instant from, Instant to);
+    List<Booking> findByStatusAndCreatedAtBefore(BookingStatus status, Instant before);
 }

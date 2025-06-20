@@ -24,4 +24,5 @@ public interface BookingService {
     List<Booking> historyByUser(UUID userId);
 
     List<Booking> historyByCar(UUID carId);
+    void expirePendingBookings();
 }

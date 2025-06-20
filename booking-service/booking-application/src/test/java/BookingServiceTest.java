@@ -2,7 +2,6 @@
 import com.carrental.booking.application.service.implementations.BookingServiceImpl;
 import com.carrental.booking.domain.entity.Booking;
 import com.carrental.booking.domain.repository.BookingRepository;
-import com.example.common.enums.BookingStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,6 +1,7 @@
 package com.carrental.booking.infrastructure.repository;
 
 import com.carrental.booking.infrastructure.entity.BookingEntity;
+import com.example.common.enums.BookingStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.Instant;
@@ -17,4 +18,5 @@ public interface SpringBookingRepository extends JpaRepository<BookingEntity, UU
             Instant from,
             Instant to
     );
+    List<BookingEntity> findByStatusAndCreatedAtBefore(BookingStatus status, Instant before);
 }

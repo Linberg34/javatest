@@ -5,6 +5,7 @@ import com.carrental.booking.infrastructure.entity.BookingEntity;
 import com.carrental.booking.infrastructure.mapper.BookingMapper;
 import com.carrental.booking.domain.repository.BookingRepository;
 import com.carrental.booking.infrastructure.repository.SpringBookingRepository;
+import com.example.common.enums.BookingStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -45,6 +47,13 @@ public class BookingRepositoryImpl implements BookingRepository {
         return springRepo.findByCarId(carId).stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public List<Booking> findByStatusAndCreatedAtBefore(BookingStatus status, Instant before) {
+        return springRepo.findByStatusAndCreatedAtBefore(status, before).stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
