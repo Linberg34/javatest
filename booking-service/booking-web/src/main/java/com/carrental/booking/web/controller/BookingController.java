@@ -109,15 +109,31 @@ public class BookingController {
     @GetMapping("/history/me")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "История аренды текущего пользователя")
-    public ResponseEntity<List<BookingResponse>> historyMe(Principal p) {
-        UUID userId = UUID.fromString(p.getName());
+    public ResponseEntity<List<BookingResponse>> historyMe(
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        UUID userId = UUID.fromString(principal.getId());
         var list = bookingService.historyByUser(userId)
                 .stream().map(bookingWebMapper::toResponse).toList();
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/history/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN') or #userId == principal.id")
+    @Operation(summary = "История аренды заданного пользователя")
+    public ResponseEntity<List<BookingResponse>> historyByUser(
+            @PathVariable("userId") UUID userId,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        var list = bookingService.historyByUser(userId)
+                .stream()
+                .map(bookingWebMapper::toResponse)
+                .toList();
+        return ResponseEntity.ok(list);
+    }
+
     @GetMapping("/history/car/{carId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "История аренды по машине")
     public ResponseEntity<List<BookingResponse>> historyByCar(
             @PathVariable("carId") UUID carId
