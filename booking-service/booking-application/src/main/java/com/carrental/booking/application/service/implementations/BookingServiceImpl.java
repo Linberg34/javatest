@@ -55,30 +55,30 @@ public class BookingServiceImpl implements BookingService {
         booking.setCreatedAt(Instant.now(clock));
         booking.setCreatedBy(String.valueOf(userId));
 
-        repo.save(booking);
+        Booking savedBooking = repo.save(booking);
+        log.info("Saved booking with ID: {}", savedBooking.getId());
 
         kafka.send("booking.requests",
                 new BookingRequestedEvent(
-                        booking.getId(),
-                        booking.getCarId(),
-                        booking.getUserId(),
+                        savedBooking.getId(),
+                        savedBooking.getCarId(),
+                        savedBooking.getUserId(),
                         Instant.now(clock).toEpochMilli(),
                         email
                 ));
 
-        log.info("Отправка PaymentRequestedEvent: {}", new PaymentRequestedEvent(booking.getId(), booking.getUserId(), 1, email));
+        log.info("Отправка PaymentRequestedEvent: {}", new PaymentRequestedEvent(savedBooking.getId(), savedBooking.getUserId(), 1, email));
 
         kafka.send("payment.requests",
                 new PaymentRequestedEvent(
-                        booking.getId(),
-                        booking.getUserId(),
-                        booking.getAmount(),
+                        savedBooking.getId(),
+                        savedBooking.getUserId(),
+                        savedBooking.getAmount(),
                         email
                 ));
-        log.info("PaymentRequestedEvent отправлено в payment.requests");
+        log.info("");
 
-
-        return booking;
+        return savedBooking;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.carrental.booking.web;
 
+import com.example.common.util.UserPrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -42,9 +43,13 @@ public class BookingServiceWeb {
         return () -> {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
-                String userId = auth.getName();
-                log.debug("AuditorAware: Returning userId={}", userId);
-                return Optional.of(userId);
+                Object principal = auth.getPrincipal();
+                if (principal instanceof UserPrincipal userPrincipal) {
+                    String userId = userPrincipal.getId().toString();
+                    log.debug("AuditorAware: Returning userId={}", userId);
+                    return Optional.of(userId);
+                }
+                log.warn("AuditorAware: Principal is not UserPrincipal, found {}", principal.getClass());
             }
             log.debug("AuditorAware: Returning default 'system'");
             return Optional.of("system");
