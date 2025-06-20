@@ -119,7 +119,8 @@ public class BookingServiceImpl implements BookingService {
 
         Booking booking = repo.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
-        booking.setStatus(BookingStatus.FAILED);
+        booking.setStatus(
+                BookingStatus.FAILED);
         booking.setUpdatedAt(Instant.now(clock));
         var saved = repo.save(booking);
 

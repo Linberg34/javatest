@@ -121,6 +121,7 @@ public class PaymentServiceImpl implements PaymentService {
                 )
         );
 
+
         log.info("Cancelled payment with ID: {}, sent failure event to payment.responses", paymentId);
         return updated;
     }
