@@ -15,6 +15,7 @@ import java.util.UUID;
 public class PaymentEvent {
     public UUID paymentId;
     public UUID bookingId;
+    public UUID userId;
     public String userEmail;
 
 }

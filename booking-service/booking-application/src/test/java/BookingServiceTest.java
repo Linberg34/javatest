@@ -90,7 +90,7 @@ class BookingServiceImplTest {
                 .thenReturn(List.of(overlappingBooking));
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () ->
-                bookingService.createBooking(testCarId, testUserId, testFrom, testTo,email));
+                bookingService.createBooking(testCarId, testUserId, testFrom, testTo));
         assertEquals("Car is already booked for the given period", exception.getMessage());
         verify(bookingRepository, times(1)).findOverlapping(testCarId, testFrom, testTo);
         verify(bookingRepository, never()).save(any());

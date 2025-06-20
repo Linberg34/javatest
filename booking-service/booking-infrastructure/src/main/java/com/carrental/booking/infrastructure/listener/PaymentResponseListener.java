@@ -24,7 +24,7 @@ public class PaymentResponseListener {
         if (ev.success()) {
             bookingService.confirmPayment(ev.bookingId(), ev.paymentId());
         } else {
-            bookingService.rejectPayment(ev.bookingId());
+            bookingService.rejectPayment(ev.bookingId(), ev.userEmail());
         }
     }
 }

@@ -37,10 +37,12 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking createBooking(UUID carId, UUID userId, Instant from, Instant to, String userEmail) {
+    public Booking createBooking(UUID carId, UUID userId, Instant from, Instant to) {
         if (!canBook(carId, from, to)) {
             throw new IllegalStateException("Car is already booked for the given period");
         }
+
+        String email = SecurityUtils.currentUserEmail();
 
         Booking booking = new Booking();
         booking.setId(UUID.randomUUID());
@@ -61,17 +63,17 @@ public class BookingServiceImpl implements BookingService {
                         booking.getCarId(),
                         booking.getUserId(),
                         Instant.now(clock).toEpochMilli(),
-                        userEmail
+                        email
                 ));
 
-        log.info("Отправка PaymentRequestedEvent: {}", new PaymentRequestedEvent(booking.getId(), booking.getUserId(), 1, userEmail));
+        log.info("Отправка PaymentRequestedEvent: {}", new PaymentRequestedEvent(booking.getId(), booking.getUserId(), 1, email));
 
         kafka.send("payment.requests",
                 new PaymentRequestedEvent(
                         booking.getId(),
                         booking.getUserId(),
                         booking.getAmount(),
-                        userEmail
+                        email
                 ));
         log.info("PaymentRequestedEvent отправлено в payment.requests");
 
@@ -103,8 +105,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public Booking rejectPayment(UUID bookingId) {
-        String email = SecurityUtils.currentUserEmail();
+    public Booking rejectPayment(UUID bookingId, String userEmail) {
 
         Booking booking = repo.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
@@ -117,7 +118,7 @@ public class BookingServiceImpl implements BookingService {
                         saved.getCarId(),
                         saved.getUserId(),
                         Instant.now(clock).toEpochMilli(),
-                        email
+                        userEmail
                         )
         );
 

@@ -34,7 +34,7 @@ public class PaymentController {
             @Valid @RequestBody CreatePaymentRequest rq,
             @AuthenticationPrincipal UserPrincipal user
     ) {
-        var payment = paymentService.createPayment(rq.bookingId(), rq.amount(), user.getEmail());
+        var payment = paymentService.createPayment(rq.bookingId(), rq.amount(), user.getEmail(), UUID.fromString(user.getId()));
 
         return ResponseEntity
                 .status(201)

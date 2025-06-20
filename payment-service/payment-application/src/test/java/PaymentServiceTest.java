@@ -38,6 +38,7 @@ class PaymentServiceTest {
     private Instant fixedInstant;
     private UUID paymentId;
     private UUID bookingId;
+    private  UUID userId;
 
     @BeforeEach
     void setUp() {
@@ -45,12 +46,14 @@ class PaymentServiceTest {
         fixedClock = Clock.fixed(fixedInstant, ZoneId.of("UTC"));
         paymentId = UUID.randomUUID();
         bookingId = UUID.randomUUID();
+        userId = UUID.randomUUID();
     }
 
     @Test
     void createPayment_ValidInput_ReturnsSavedPayment() {
         long amount = 1000L;
         String email = "testEmail";
+
         Payment expectedPayment = new Payment();
         expectedPayment.setId(paymentId);
         expectedPayment.setBookingId(bookingId);
@@ -58,11 +61,11 @@ class PaymentServiceTest {
         expectedPayment.setStatus(PaymentStatus.NEW_PAYMENT);
         expectedPayment.setCreatedAt(fixedInstant);
         expectedPayment.setUpdatedAt(fixedInstant);
-        expectedPayment.setCreatedBy("system");
+        expectedPayment.setCreatedBy(String.valueOf(userId));
 
         when(paymentRepository.save(any(Payment.class))).thenReturn(expectedPayment);
 
-        Payment result = paymentService.createPayment(bookingId, amount,email);
+        Payment result = paymentService.createPayment(bookingId, amount,email,userId);
 
         assertNotNull(result);
         assertEquals(paymentId, result.getId());
@@ -83,7 +86,7 @@ class PaymentServiceTest {
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> paymentService.createPayment(bookingId, invalidAmount, email)
+                () -> paymentService.createPayment(bookingId, invalidAmount, email, userId)
         );
         assertEquals("Amount must be positive", exception.getMessage());
         verify(paymentRepository, never()).save(any());

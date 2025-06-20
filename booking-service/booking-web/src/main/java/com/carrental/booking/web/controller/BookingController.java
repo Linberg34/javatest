@@ -63,9 +63,8 @@ public class BookingController {
         }
 
         UUID userId = UUID.fromString(user.getId());
-        String userEmail = user.getEmail();
         var booking = bookingService.createBooking(
-                rq.getCarId(), userId, rq.getRentFrom(), rq.getRentTo(),userEmail
+                rq.getCarId(), userId, rq.getRentFrom(), rq.getRentTo()
         );
         return ResponseEntity
                 .accepted()

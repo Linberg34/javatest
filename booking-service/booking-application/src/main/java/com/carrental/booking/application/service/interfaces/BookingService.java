@@ -9,11 +9,11 @@ import java.util.UUID;
 public interface BookingService {
     boolean canBook(UUID carId, Instant from, Instant to);
 
-    Booking createBooking(UUID carId, UUID userId, Instant from, Instant to, String userEmail);
+    Booking createBooking(UUID carId, UUID userId, Instant from, Instant to);
 
     Booking confirmPayment(UUID bookingId, UUID paymentId);
 
-    Booking rejectPayment(UUID bookingId);
+    Booking rejectPayment(UUID bookingId, String userEmail);
 
 
     Booking findById(UUID bookingId);

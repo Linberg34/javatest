@@ -27,7 +27,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Transactional
-    public Payment createPayment(UUID bookingId, long amount, String userEmail) {
+    public Payment createPayment(UUID bookingId, long amount, String userEmail, UUID userId) {
         try {
             if (amount <= 0) {
                 throw new IllegalArgumentException("Amount must be positive");
@@ -39,12 +39,12 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setStatus(PaymentStatus.NEW_PAYMENT);
             payment.setCreatedAt(Instant.now());
             payment.setUpdatedAt(Instant.now());
-            payment.setCreatedBy("system");
+            payment.setCreatedBy(String.valueOf(userId));
 
             Payment savedPayment = paymentRepository.save(payment);
             log.info("Created new payment with ID: {}", savedPayment.getId());
 
-            PaymentEvent evt = new PaymentEvent(savedPayment.getId(), savedPayment.getBookingId(), userEmail);
+            PaymentEvent evt = new PaymentEvent(savedPayment.getId(), savedPayment.getBookingId(),userId, userEmail);
             kafkaTemplate.send("payment.new", evt);
             return savedPayment;
         } catch (Exception e) {
@@ -99,6 +99,8 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus(PaymentStatus.CANCELLED);
         payment.setUpdatedAt(Instant.now());
         var updated = paymentRepository.save(payment);
+
+        log.info("Updated payment object: {}", updated);
 
         kafkaTemplate.send("payment.responses",
                 new PaymentSucceededEvent(
